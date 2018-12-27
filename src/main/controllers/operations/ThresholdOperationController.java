@@ -22,6 +22,12 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	public void setControlsValues(ThresholdOperation operation) {
 		double threshold = operation.getThreshold();
 		thresholdSlider.setValue(threshold);
+
+		if (operation.getThresholdType() == Imgproc.THRESH_BINARY) {
+			invertCheckbox.selectedProperty().setValue(false);
+		} else if (operation.getThresholdType() == Imgproc.THRESH_BINARY_INV) {
+			invertCheckbox.selectedProperty().setValue(true);
+		}
 	}
 
 	@Override
