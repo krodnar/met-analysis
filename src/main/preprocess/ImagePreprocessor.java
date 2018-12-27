@@ -1,11 +1,12 @@
 package main.preprocess;
 
-import javafx.scene.image.Image;
 import main.preprocess.operations.PreprocessorOperation;
-import main.utils.Utils;
 import org.opencv.core.Mat;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static main.preprocess.OperationType.*;
 
@@ -99,8 +100,8 @@ public class ImagePreprocessor {
 			throw new IllegalArgumentException(String.format("Operation index %d is out of range", operationIndex));
 		}
 
-		lastOperationIndex = operationIndex;
 		getOperation(operationIndex).apply(getMat(operationIndex - 1), getMat(operationIndex));
+		lastOperationIndex = operationIndex;
 	}
 
 	public boolean isReady() {
@@ -152,6 +153,10 @@ public class ImagePreprocessor {
 		return matrices.get(operationIndex);
 	}
 
+	public Mat getMat(PreprocessorOperation operation) {
+		return getMat(operation.getIndex());
+	}
+
 	public PreprocessorOperation getOperation(int operationIndex) {
 		return operations.get(operationIndex);
 	}
@@ -180,24 +185,8 @@ public class ImagePreprocessor {
 		return sourceMat.clone();
 	}
 
-	public Image getImage(int operationIndex) {
-		return Utils.mat2Image(getMat(operationIndex));
-	}
-
-	public Image getImage(PreprocessorOperation operation) {
-		return getImage(operation.getIndex());
-	}
-
-	public Image getSourceImage() {
-		return Utils.mat2Image(getSource());
-	}
-
 	public List<OperationType> getOperationsOrder() {
 		return operationsOrder;
-	}
-
-	public Image getProcessedImage() {
-		return Utils.mat2Image(getProcessedMat());
 	}
 
 	public Mat getProcessedMat() {

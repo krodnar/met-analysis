@@ -70,7 +70,8 @@ public class OperationsController implements Initializable, OperationController.
 				preprocessor.applyOperationsFrom(oldOperation);
 			}
 
-			imageView.setImage(preprocessor.getImage(newOperation));
+			Mat imageMat = preprocessor.getMat(newOperation);
+			imageView.setImage(Utils.mat2Image(imageMat));
 
 			switch (newOperation.getType()) {
 
@@ -127,7 +128,8 @@ public class OperationsController implements Initializable, OperationController.
 
 	@Override
 	public void onOperationApply(OperationController controller, PreprocessorOperation operation) {
-		imageView.setImage(preprocessor.getImage(operation));
+		Mat imageMat = preprocessor.getMat(operation);
+		imageView.setImage(Utils.mat2Image(imageMat));
 	}
 
 	public ImagePreprocessor getPreprocessor() {
@@ -144,6 +146,6 @@ public class OperationsController implements Initializable, OperationController.
 	}
 
 	public Image getProcessedImage() {
-		return preprocessor.getProcessedImage();
+		return Utils.mat2Image(preprocessor.getProcessedMat());
 	}
 }
