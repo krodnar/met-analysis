@@ -6,26 +6,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
 import main.controllers.operations.*;
-import main.preprocess.*;
+import main.preprocess.ImagePreprocessor;
 import main.preprocess.operations.*;
 import main.utils.Utils;
 import main.views.ImageViewPane;
 import main.views.OperationListCell;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class OperationsController implements Initializable, OperationController.OperationControlsListener {
@@ -35,16 +35,23 @@ public class OperationsController implements Initializable, OperationController.
 	private ImageView imageView = new ImageView();
 	private ImageViewPane imageViewPane = new ImageViewPane(imageView);
 
+	private ImageView contoursView = new ImageView();
+	private ImageViewPane contoursViewPane = new ImageViewPane(contoursView);
+
 	@FXML
 	private ListView<PreprocessorOperation> operationsList;
 	@FXML
 	private BorderPane operationContainer;
 	@FXML
 	private HBox controlsContainer;
+	@FXML
+	private BorderPane contoursContainer;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		imageView.setPreserveRatio(true);
+		contoursView.setPreserveRatio(true);
+		contoursContainer.setCenter(contoursViewPane);
 
 		initList();
 		populateList(preprocessor);
@@ -118,18 +125,35 @@ public class OperationsController implements Initializable, OperationController.
 
 			controlsContainer.getChildren().clear();
 			controlsContainer.getChildren().add(controls);
+			showContours();
 		});
 	}
 
 	public void setSource(Mat sourceMat) {
 		imageView.setImage(Utils.mat2Image(sourceMat));
 		operationContainer.setCenter(imageViewPane);
+		showContours();
+	}
+
+	public void showContours() {
+		preprocessor.finishProcessing();
+		Mat source = preprocessor.getSource();
+		Mat processedMat = preprocessor.getProcessedMat();
+
+		List<MatOfPoint> contours = new ArrayList<>();
+		Mat hierarchy = new Mat();
+
+		Imgproc.findContours(processedMat, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.drawContours(source, contours, -1, new Scalar(255), 3);
+
+		contoursView.setImage(Utils.mat2Image(source));
 	}
 
 	@Override
 	public void onOperationApply(OperationController controller, PreprocessorOperation operation) {
 		Mat imageMat = preprocessor.getMat(operation);
 		imageView.setImage(Utils.mat2Image(imageMat));
+		showContours();
 	}
 
 	public ImagePreprocessor getPreprocessor() {

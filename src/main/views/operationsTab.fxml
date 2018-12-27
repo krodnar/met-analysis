@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<SplitPane dividerPositions="0.2" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.OperationsController">
+<SplitPane dividerPositions="0.15, 0.7" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.OperationsController">
    <items>
       <AnchorPane>
          <children>
@@ -21,5 +21,6 @@
          <center>
             <Label text="Open image using &quot;File -&gt; Open&quot;" BorderPane.alignment="CENTER" />
          </center></BorderPane>
+      <BorderPane fx:id="contoursContainer" />
    </items>
 </SplitPane>
