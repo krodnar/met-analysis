@@ -15,6 +15,8 @@ public class ImagePreprocessor {
 	private List<Mat> matrices = new LinkedList<>();
 	private List<PreprocessorOperation> operations = new LinkedList<>();
 
+	private int lastOperationIndex = 0;
+
 	private List<OperationType> operationsOrder = new ArrayList<>(Arrays.asList(
 			GRAYSCALE,
 			CLAHE,
@@ -50,6 +52,14 @@ public class ImagePreprocessor {
 
 	public void fullProcess() {
 		applyOperationsFrom(0);
+	}
+
+	public void finishProcessing() {
+		if (lastOperationIndex == operations.size() - 1) {
+			return;
+		}
+
+		applyOperationsFrom(lastOperationIndex + 1);
 	}
 
 	public void applyOperationsFrom(int operationIndex) {
@@ -89,6 +99,7 @@ public class ImagePreprocessor {
 			throw new IllegalArgumentException(String.format("Operation index %d is out of range", operationIndex));
 		}
 
+		lastOperationIndex = operationIndex;
 		getOperation(operationIndex).apply(getMat(operationIndex - 1), getMat(operationIndex));
 	}
 
