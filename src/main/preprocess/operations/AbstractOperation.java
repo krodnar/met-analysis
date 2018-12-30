@@ -2,7 +2,7 @@ package main.preprocess.operations;
 
 import org.opencv.core.Mat;
 
-public abstract class AbstractOperation implements PreprocessorOperation {
+public abstract class AbstractOperation<T extends PreprocessorOperation<T>> implements PreprocessorOperation<T> {
 
 	private int index = -1;
 

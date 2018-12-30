@@ -6,7 +6,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
-public class ClaheOperation extends AbstractOperation {
+public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
     public ClaheOperation() {
     }
@@ -27,7 +27,16 @@ public class ClaheOperation extends AbstractOperation {
 		return OperationType.CLAHE;
 	}
 
-	public void setTilesSize(Size tilesSize) {
+
+    @Override
+    public ClaheOperation copy() {
+        ClaheOperation operation = new ClaheOperation();
+        operation.setTilesSize(getTilesSize());
+        operation.setClipLimit(getClipLimit());
+        return operation;
+    }
+
+    public void setTilesSize(Size tilesSize) {
         clahe.setTilesGridSize(tilesSize);
     }
 

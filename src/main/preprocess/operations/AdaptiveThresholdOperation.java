@@ -4,7 +4,7 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class AdaptiveThresholdOperation extends AbstractOperation {
+public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresholdOperation> {
 
     private int adaptiveMethod = Imgproc.ADAPTIVE_THRESH_MEAN_C;
     private int thresholdType = Imgproc.THRESH_BINARY;
@@ -21,7 +21,18 @@ public class AdaptiveThresholdOperation extends AbstractOperation {
 		return OperationType.THRESHOLD;
 	}
 
-	public int getAdaptiveMethod() {
+
+    @Override
+    public AdaptiveThresholdOperation copy() {
+        AdaptiveThresholdOperation operation = new AdaptiveThresholdOperation();
+        operation.adaptiveMethod = adaptiveMethod;
+        operation.thresholdType = thresholdType;
+        operation.blockSize = blockSize;
+        operation.subConstant = subConstant;
+        return operation;
+    }
+
+    public int getAdaptiveMethod() {
         return adaptiveMethod;
     }
 

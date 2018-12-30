@@ -4,7 +4,7 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class BlurOperation extends AbstractOperation {
+public class BlurOperation extends AbstractOperation<BlurOperation> {
 
     private int kernelSize = 51;
 
@@ -23,6 +23,13 @@ public class BlurOperation extends AbstractOperation {
 	@Override
 	public OperationType getType() {
 		return OperationType.BLUR;
+	}
+
+	@Override
+	public BlurOperation copy() {
+		BlurOperation operation = new BlurOperation();
+		operation.kernelSize = kernelSize;
+		return operation;
 	}
 
 	public int getKernelSize() {

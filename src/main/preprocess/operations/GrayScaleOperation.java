@@ -4,7 +4,7 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class GrayScaleOperation extends AbstractOperation {
+public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 
     public GrayScaleOperation() {
     }
@@ -21,5 +21,10 @@ public class GrayScaleOperation extends AbstractOperation {
 	@Override
 	public OperationType getType() {
 		return OperationType.GRAYSCALE;
+	}
+
+	@Override
+	public GrayScaleOperation copy() {
+		return new GrayScaleOperation();
 	}
 }

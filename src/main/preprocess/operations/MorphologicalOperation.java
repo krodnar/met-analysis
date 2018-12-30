@@ -5,7 +5,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class MorphologicalOperation extends AbstractOperation {
+public class MorphologicalOperation extends AbstractOperation<MorphologicalOperation> {
 
     private Size crossSize;
     private Size ellipseSize;
@@ -35,7 +35,18 @@ public class MorphologicalOperation extends AbstractOperation {
 		return OperationType.MORPHOLOGY;
 	}
 
-	public void setEllipseSize(Size size) {
+
+    @Override
+    public MorphologicalOperation copy() {
+        MorphologicalOperation operation = new MorphologicalOperation();
+        operation.crossSize = crossSize;
+        operation.ellipseSize = ellipseSize;
+        operation.kernelCross = kernelCross;
+        operation.kernelEllipse = kernelEllipse;
+        return operation;
+    }
+
+    public void setEllipseSize(Size size) {
         ellipseSize = size;
         kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
     }
