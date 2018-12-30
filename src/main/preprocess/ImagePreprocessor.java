@@ -2,6 +2,8 @@ package main.preprocess;
 
 import main.preprocess.operations.PreprocessorOperation;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +19,10 @@ public class ImagePreprocessor {
 	private List<PreprocessorOperation> operations = new LinkedList<>();
 
 	private int lastOperationIndex = 0;
+
+	private boolean scaled;
+	private Mat unscaledMat;
+	private List<PreprocessorOperation> unscaledOperations = new LinkedList<>();
 
 	private List<OperationType> operationsOrder = new ArrayList<>(Arrays.asList(
 			GRAYSCALE,
@@ -102,6 +108,34 @@ public class ImagePreprocessor {
 
 		getOperation(operationIndex).apply(getMat(operationIndex - 1), getMat(operationIndex));
 		lastOperationIndex = operationIndex;
+	}
+
+	public void scale(double value) {
+		if (scaled) {
+			throw new IllegalStateException("Image preprocessor is already scaled.");
+		}
+
+		unscaledMat = sourceMat.clone();
+		unscaledOperations.clear();
+		Imgproc.resize(sourceMat, sourceMat, new Size(), value, value);
+
+		for (PreprocessorOperation operation : operations) {
+			unscaledOperations.add(operation.copy());
+			operation.scale(value);
+		}
+
+		scaled = true;
+	}
+
+	public void unscale() {
+		sourceMat = unscaledMat.clone();
+		operations = new LinkedList<>(unscaledOperations);
+
+		scaled = false;
+	}
+
+	public boolean isScaled() {
+		return scaled;
 	}
 
 	public boolean isReady() {

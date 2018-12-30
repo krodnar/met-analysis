@@ -35,6 +35,17 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
 		return OperationType.MORPHOLOGY;
 	}
 
+    @Override
+    public void scale(double value) {
+        crossSize.width = crossSize.width * value;
+        crossSize.height = crossSize.height * value;
+
+        ellipseSize.width = ellipseSize.width * value;
+        ellipseSize.height = ellipseSize.height * value;
+
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
+    }
 
     @Override
     public MorphologicalOperation copy() {

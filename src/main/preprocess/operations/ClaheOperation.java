@@ -27,6 +27,12 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 		return OperationType.CLAHE;
 	}
 
+    @Override
+    public void scale(double value) {
+        double height = clahe.getTilesGridSize().height;
+        Size scaledSize = new Size(height * value, height * value);
+        setTilesSize(scaledSize);
+    }
 
     @Override
     public ClaheOperation copy() {

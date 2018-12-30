@@ -15,5 +15,7 @@ public interface PreprocessorOperation<T extends PreprocessorOperation<T>> {
 
 	OperationType getType();
 
+	void scale(double value);
+
 	T copy();
 }

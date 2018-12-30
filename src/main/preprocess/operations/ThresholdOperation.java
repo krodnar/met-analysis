@@ -27,6 +27,10 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 		return OperationType.THRESHOLD;
 	}
 
+    @Override
+    public void scale(double value) {
+
+    }
 
     @Override
     public ThresholdOperation copy() {

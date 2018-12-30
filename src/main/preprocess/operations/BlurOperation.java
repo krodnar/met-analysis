@@ -26,6 +26,15 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	}
 
 	@Override
+	public void scale(double value) {
+		kernelSize *= value;
+
+		if (kernelSize % 2 != 1) {
+			kernelSize += 1;
+		}
+	}
+
+	@Override
 	public BlurOperation copy() {
 		BlurOperation operation = new BlurOperation();
 		operation.kernelSize = kernelSize;

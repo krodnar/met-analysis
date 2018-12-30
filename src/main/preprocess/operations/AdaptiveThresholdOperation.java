@@ -21,6 +21,10 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 		return OperationType.THRESHOLD;
 	}
 
+    @Override
+    public void scale(double value) {
+        blockSize *= value;
+    }
 
     @Override
     public AdaptiveThresholdOperation copy() {
