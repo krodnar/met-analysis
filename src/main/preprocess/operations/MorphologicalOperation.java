@@ -18,12 +18,6 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
         setCrossSize(new Size(30, 30));
     }
 
-    public MorphologicalOperation(int index) {
-        super(index);
-        setEllipseSize(new Size(18, 18));
-        setCrossSize(new Size(30, 30));
-    }
-
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.morphologyEx(src, dst, Imgproc.MORPH_ERODE, kernelEllipse);

@@ -11,10 +11,6 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
     public ClaheOperation() {
     }
 
-    public ClaheOperation(int index) {
-        super(index);
-    }
-
     private final CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
 
     @Override

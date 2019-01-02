@@ -1,7 +1,7 @@
 package main.views;
 
 import javafx.scene.control.ListCell;
-import main.preprocess.operations.PreprocessorOperation;
+import main.preprocess.PreprocessorOperation;
 
 public class OperationListCell extends ListCell<PreprocessorOperation> {
 

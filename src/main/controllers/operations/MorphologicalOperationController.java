@@ -3,6 +3,7 @@ package main.controllers.operations;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import main.preprocess.ImagePreprocessor;
+import main.preprocess.PreprocessorOperation;
 import main.preprocess.operations.MorphologicalOperation;
 import org.opencv.core.Size;
 
@@ -14,7 +15,7 @@ public class MorphologicalOperationController extends OperationController<Morpho
     @FXML
     private Slider ellipseSizeSlider;
 
-    public MorphologicalOperationController(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
+    public MorphologicalOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<MorphologicalOperation> operation) {
         super(preprocessor, operation);
     }
 

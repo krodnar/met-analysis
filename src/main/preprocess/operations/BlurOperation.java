@@ -11,10 +11,6 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
     public BlurOperation() {
     }
 
-    public BlurOperation(int index) {
-        super(index);
-    }
-
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.medianBlur(src, dst, kernelSize);

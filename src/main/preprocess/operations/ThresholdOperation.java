@@ -13,10 +13,6 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
         threshold = getOptimalThresh();
     }
 
-    public ThresholdOperation(int index) {
-        super(index);
-    }
-
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.threshold(src, dst, threshold, 255, thresholdType);

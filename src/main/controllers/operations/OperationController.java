@@ -2,19 +2,20 @@ package main.controllers.operations;
 
 import javafx.fxml.Initializable;
 import main.preprocess.ImagePreprocessor;
-import main.preprocess.operations.PreprocessorOperation;
+import main.preprocess.PreprocessorOperation;
+import main.preprocess.operations.ImageOperation;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public abstract class OperationController<T extends PreprocessorOperation> implements Initializable {
+public abstract class OperationController<T extends ImageOperation<T>> implements Initializable {
 
 	private ImagePreprocessor preprocessor;
-	private T operation;
+	private PreprocessorOperation<T> operation;
 	private ArrayList<OperationControlsListener> listeners = new ArrayList<>();
 
-	public OperationController(ImagePreprocessor preprocessor, T operation) {
+	public OperationController(ImagePreprocessor preprocessor, PreprocessorOperation<T> operation) {
 		this.preprocessor = preprocessor;
 		this.operation = operation;
 	}
@@ -28,11 +29,11 @@ public abstract class OperationController<T extends PreprocessorOperation> imple
 	}
 
 	public void applyOperation() {
-		preprocessor.applySingleOperation(operation);
-		fireOnApply(operation);
+		operation.apply();
+		fireOnApply();
 	}
 
-	private void fireOnApply(PreprocessorOperation operation) {
+	private void fireOnApply() {
 		for (OperationControlsListener listener : listeners) {
 			listener.onOperationApply(this, operation);
 		}
@@ -40,8 +41,8 @@ public abstract class OperationController<T extends PreprocessorOperation> imple
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		setControlsValues(operation);
-		setControlsListeners(operation);
+		setControlsValues(operation.getImageOperation());
+		setControlsListeners(operation.getImageOperation());
 	}
 
 	public abstract void setControlsValues(T operation);

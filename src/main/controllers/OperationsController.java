@@ -6,14 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
 import main.controllers.operations.*;
 import main.preprocess.*;
 import main.preprocess.operations.*;
@@ -21,9 +18,7 @@ import main.utils.Utils;
 import main.views.ImageViewPane;
 import main.views.OperationListCell;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -79,24 +74,24 @@ public class OperationsController implements Initializable, OperationController.
 					return;
 				case CLAHE:
 					loader.setLocation(getClass().getResource("../views/claheOperation.fxml"));
-					controller = new ClaheOperationController(preprocessor, (ClaheOperation) newOperation);
+					controller = new ClaheOperationController(preprocessor, newOperation);
 					break;
 				// TODO: 25.12.2018 add adaptive threshold controls
 				// case ADAPTIVE_THRESHOLD:
 				// 	loader.setLocation(getClass().getResource("../views/adaptiveThresholdOperation.fxml"));
-				// 	controller = new AdaptiveThresholdOperationController(preprocessor, ((AdaptiveThresholdOperation) newOperation));
+				// 	controller = new AdaptiveThresholdOperationController(preprocessor, (newOperation));
 				// 	break;
 				case THRESHOLD:
 					loader.setLocation(getClass().getResource("../views/thresholdOperation.fxml"));
-					controller = new ThresholdOperationController(preprocessor, (ThresholdOperation) newOperation);
+					controller = new ThresholdOperationController(preprocessor, newOperation);
 					break;
 				case MORPHOLOGY:
 					loader.setLocation(getClass().getResource("../views/morphologicalOperation.fxml"));
-					controller = new MorphologicalOperationController(preprocessor, (MorphologicalOperation) newOperation);
+					controller = new MorphologicalOperationController(preprocessor, newOperation);
 					break;
 				case BLUR:
 					loader.setLocation(getClass().getResource("../views/blurOperation.fxml"));
-					controller = new BlurOperationController(preprocessor, (BlurOperation) newOperation);
+					controller = new BlurOperationController(preprocessor, newOperation);
 					break;
 				default:
 					return;
@@ -128,7 +123,7 @@ public class OperationsController implements Initializable, OperationController.
 
 	@Override
 	public void onOperationApply(OperationController controller, PreprocessorOperation operation) {
-		Mat imageMat = preprocessor.getMat(operation);
+		Mat imageMat = preprocessor.getMat(operation.getIndex());
 		imageView.setImage(Utils.mat2Image(imageMat));
 	}
 

@@ -2,6 +2,7 @@ package main.controllers.operations;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
+import main.preprocess.PreprocessorOperation;
 import main.preprocess.operations.ClaheOperation;
 import main.preprocess.ImagePreprocessor;
 import org.opencv.core.Size;
@@ -14,7 +15,7 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	@FXML
 	private Slider tileSizeSlider;
 
-	public ClaheOperationController(ImagePreprocessor preprocessor, ClaheOperation operation) {
+	public ClaheOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ClaheOperation> operation) {
 		super(preprocessor, operation);
 	}
 
