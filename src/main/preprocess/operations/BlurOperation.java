@@ -8,8 +8,12 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 
     private int kernelSize = 51;
 
-    public BlurOperation() {
-    }
+	public BlurOperation() {
+	}
+
+	public BlurOperation(BlurOperation operation) {
+		this.kernelSize = operation.kernelSize;
+	}
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -32,9 +36,7 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 
 	@Override
 	public BlurOperation copy() {
-		BlurOperation operation = new BlurOperation();
-		operation.kernelSize = kernelSize;
-		return operation;
+		return new BlurOperation(this);
 	}
 
 	public int getKernelSize() {

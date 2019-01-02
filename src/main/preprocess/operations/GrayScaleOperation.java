@@ -9,6 +9,9 @@ public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
     public GrayScaleOperation() {
     }
 
+	public GrayScaleOperation(GrayScaleOperation operation) {
+	}
+
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.cvtColor(src, dst, Imgproc.COLOR_BGR2GRAY);
@@ -26,6 +29,6 @@ public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 
 	@Override
 	public GrayScaleOperation copy() {
-		return new GrayScaleOperation();
+		return new GrayScaleOperation(this);
 	}
 }

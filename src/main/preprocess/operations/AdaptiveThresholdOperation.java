@@ -11,6 +11,16 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
     private int blockSize;
     private double subConstant;
 
+    public AdaptiveThresholdOperation() {
+    }
+
+    public AdaptiveThresholdOperation(AdaptiveThresholdOperation operation) {
+        this.adaptiveMethod = operation.adaptiveMethod;
+        this.thresholdType = operation.thresholdType;
+        this.blockSize = operation.blockSize;
+        this.subConstant = operation.subConstant;
+    }
+
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.adaptiveThreshold(src, dst, 255, adaptiveMethod, thresholdType, blockSize, subConstant);
@@ -28,12 +38,7 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 
     @Override
     public AdaptiveThresholdOperation copy() {
-        AdaptiveThresholdOperation operation = new AdaptiveThresholdOperation();
-        operation.adaptiveMethod = adaptiveMethod;
-        operation.thresholdType = thresholdType;
-        operation.blockSize = blockSize;
-        operation.subConstant = subConstant;
-        return operation;
+        return new AdaptiveThresholdOperation(this);
     }
 
     public int getAdaptiveMethod() {

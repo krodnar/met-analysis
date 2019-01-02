@@ -18,6 +18,13 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
         setCrossSize(new Size(30, 30));
     }
 
+    public MorphologicalOperation(MorphologicalOperation operation) {
+        this.crossSize = operation.crossSize.clone();
+        this.ellipseSize = operation.ellipseSize.clone();
+        this.kernelCross = operation.kernelCross.clone();
+        this.kernelEllipse = operation.kernelEllipse.clone();
+    }
+
     @Override
     public void apply(Mat src, Mat dst) {
         Imgproc.morphologyEx(src, dst, Imgproc.MORPH_ERODE, kernelEllipse);
@@ -43,12 +50,7 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
 
     @Override
     public MorphologicalOperation copy() {
-        MorphologicalOperation operation = new MorphologicalOperation();
-        operation.crossSize = crossSize;
-        operation.ellipseSize = ellipseSize;
-        operation.kernelCross = kernelCross;
-        operation.kernelEllipse = kernelEllipse;
-        return operation;
+        return new MorphologicalOperation(this);
     }
 
     public void setEllipseSize(Size size) {

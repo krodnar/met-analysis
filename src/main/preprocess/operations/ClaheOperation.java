@@ -11,7 +11,11 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
     public ClaheOperation() {
     }
 
-    private final CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
+    public ClaheOperation(ClaheOperation operation) {
+        this.clahe = Imgproc.createCLAHE(operation.getClipLimit(), operation.getTilesSize().clone());
+    }
+
+    private CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -32,10 +36,7 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
     @Override
     public ClaheOperation copy() {
-        ClaheOperation operation = new ClaheOperation();
-        operation.setTilesSize(getTilesSize());
-        operation.setClipLimit(getClipLimit());
-        return operation;
+        return new ClaheOperation(this);
     }
 
     public void setTilesSize(Size tilesSize) {
