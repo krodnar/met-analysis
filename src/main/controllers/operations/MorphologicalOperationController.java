@@ -20,7 +20,7 @@ public class MorphologicalOperationController extends OperationController<Morpho
     }
 
     @Override
-    public void setControlsValues(MorphologicalOperation operation) {
+    public void setControlsValues(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
         double crossSize = operation.getCrossSize().height;
         crossSizeSlider.setValue(crossSize);
 
@@ -29,7 +29,7 @@ public class MorphologicalOperationController extends OperationController<Morpho
     }
 
     @Override
-    public void setControlsListeners(MorphologicalOperation operation) {
+    public void setControlsListeners(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
         crossSizeSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
             Size newSize = new Size(newValue.doubleValue(), newValue.doubleValue());
             operation.setCrossSize(newSize);

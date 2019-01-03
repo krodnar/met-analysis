@@ -37,15 +37,21 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
 	}
 
     @Override
-    public void scale(double value) {
-        crossSize.width = crossSize.width * value;
-        crossSize.height = crossSize.height * value;
+    protected void scaleParameters(double value) {
+        scaleCrossSize(value);
+        scaleEllipseSize(value);
+    }
 
+    private void scaleEllipseSize(double value) {
         ellipseSize.width = ellipseSize.width * value;
         ellipseSize.height = ellipseSize.height * value;
-
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
         kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
+    }
+
+    private void scaleCrossSize(double value) {
+        crossSize.width = crossSize.width * value;
+        crossSize.height = crossSize.height * value;
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
     }
 
     @Override
@@ -56,11 +62,13 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     public void setEllipseSize(Size size) {
         ellipseSize = size;
         kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
+        scaleEllipseSize(getScaleValue());
     }
 
     public void setCrossSize(Size size) {
         crossSize = size;
         kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
+        scaleCrossSize(getScaleValue());
     }
 
     public Size getCrossSize() {

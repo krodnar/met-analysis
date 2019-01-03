@@ -28,10 +28,14 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 	}
 
     @Override
-    public void scale(double value) {
+    protected void scaleParameters(double value) {
+        scaleTileSize(value);
+    }
+
+    private void scaleTileSize(double value) {
         double height = clahe.getTilesGridSize().height;
         Size scaledSize = new Size(height * value, height * value);
-        setTilesSize(scaledSize);
+        clahe.setTilesGridSize(scaledSize);
     }
 
     @Override
@@ -41,6 +45,7 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
     public void setTilesSize(Size tilesSize) {
         clahe.setTilesGridSize(tilesSize);
+        scaleTileSize(getScaleValue());
     }
 
     public void setClipLimit(double clipLimit) {

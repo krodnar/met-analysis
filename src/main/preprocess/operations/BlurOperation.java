@@ -26,7 +26,11 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	}
 
 	@Override
-	public void scale(double value) {
+	protected void scaleParameters(double value) {
+		scaleKernelSize(value);
+	}
+
+	private void scaleKernelSize(double value) {
 		kernelSize *= value;
 
 		if (kernelSize % 2 != 1) {
@@ -45,5 +49,6 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 
     public void setKernelSize(int kernelSize) {
         this.kernelSize = kernelSize;
+		scaleKernelSize(getScaleValue());
     }
 }

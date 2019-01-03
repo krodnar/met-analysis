@@ -41,13 +41,13 @@ public abstract class OperationController<T extends ImageOperation<T>> implement
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		setControlsValues(operation.getImageOperation());
-		setControlsListeners(operation.getImageOperation());
+		setControlsValues(preprocessor, operation.getImageOperation());
+		setControlsListeners(preprocessor, operation.getImageOperation());
 	}
 
-	public abstract void setControlsValues(T operation);
+	public abstract void setControlsValues(ImagePreprocessor preprocessor, T operation);
 
-	public abstract void setControlsListeners(T operation);
+	public abstract void setControlsListeners(ImagePreprocessor preprocessor, T operation);
 
 	public interface OperationControlsListener {
 

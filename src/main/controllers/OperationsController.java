@@ -12,8 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import main.controllers.operations.*;
-import main.preprocess.*;
-import main.preprocess.operations.*;
+import main.preprocess.ImagePreprocessor;
+import main.preprocess.PreprocessorOperation;
 import main.utils.Utils;
 import main.views.ImageViewPane;
 import main.views.OperationListCell;
@@ -123,7 +123,7 @@ public class OperationsController implements Initializable, OperationController.
 
 	@Override
 	public void onOperationApply(OperationController controller, PreprocessorOperation operation) {
-		Mat imageMat = preprocessor.getMat(operation.getIndex());
+		Mat imageMat = operation.getResult();
 		imageView.setImage(Utils.mat2Image(imageMat));
 	}
 

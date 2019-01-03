@@ -29,7 +29,7 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 	}
 
     @Override
-    public void scale(double value) {
+    protected void scaleParameters(double value) {
 
     }
 

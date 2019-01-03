@@ -23,7 +23,7 @@ public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 	}
 
 	@Override
-	public void scale(double value) {
+	protected void scaleParameters(double value) {
 
 	}
 

@@ -7,7 +7,6 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 
 	private ImagePreprocessor preprocessor;
 	private T operation;
-	private T unscaledOperation;
 
 	private Mat resultMat = new Mat();
 
@@ -44,7 +43,6 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 			return false;
 		}
 
-		unscaledOperation = operation.copy();
 		operation.scale(value);
 		scaled = true;
 		return true;
@@ -55,7 +53,7 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 			return false;
 		}
 
-		operation = unscaledOperation;
+		operation.unscale();
 		scaled = false;
 		return true;
 	}

@@ -1,6 +1,6 @@
 package main.preprocess;
 
-import main.preprocess.operations.*;
+import main.preprocess.operations.ImageOperation;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -90,7 +90,7 @@ public class ImagePreprocessor {
 	}
 
 	public void applySingleOperation(PreprocessorOperation operation) {
-		applyOperation(operation.getIndex());
+		applySingleOperation(operation.getIndex());
 	}
 
 	private void applyOperation(int operationIndex) {

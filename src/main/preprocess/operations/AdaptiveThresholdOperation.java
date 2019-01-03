@@ -32,7 +32,11 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 	}
 
     @Override
-    public void scale(double value) {
+    protected void scaleParameters(double value) {
+        scaleBlockSize(value);
+    }
+
+    private void scaleBlockSize(double value) {
         blockSize *= value;
     }
 
@@ -63,6 +67,7 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 
     public void setBlockSize(int blockSize) {
         this.blockSize = blockSize;
+        scaleBlockSize(getScaleValue());
     }
 
     public double getSubConstant() {

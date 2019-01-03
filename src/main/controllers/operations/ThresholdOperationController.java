@@ -20,7 +20,7 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	}
 
 	@Override
-	public void setControlsValues(ThresholdOperation operation) {
+	public void setControlsValues(ImagePreprocessor preprocessor, ThresholdOperation operation) {
 		double threshold = operation.getThreshold();
 		thresholdSlider.setValue(threshold);
 
@@ -32,7 +32,7 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	}
 
 	@Override
-	public void setControlsListeners(ThresholdOperation operation) {
+	public void setControlsListeners(ImagePreprocessor preprocessor, ThresholdOperation operation) {
 		thresholdSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			operation.setThreshold(newValue.doubleValue());
 			applyOperation();
