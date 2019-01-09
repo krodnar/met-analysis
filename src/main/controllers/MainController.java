@@ -46,7 +46,6 @@ public class MainController implements Initializable {
 
 		contoursTab.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
 			if (isSelected) {
-				preprocessor.fullProcess();
 				contoursController.showContours();
 			}
 		});

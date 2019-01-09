@@ -54,9 +54,6 @@ public class OperationsController implements Initializable, OperationController.
 
 	private void initList() {
 		operationsList.getSelectionModel().selectedItemProperty().addListener((observable, oldOperation, newOperation) -> {
-			FXMLLoader loader = new FXMLLoader();
-			OperationController controller = null;
-
 			if (!preprocessor.isReady()) {
 				return;
 			}
@@ -68,57 +65,66 @@ public class OperationsController implements Initializable, OperationController.
 			Mat imageMat = preprocessor.getMat(newOperation);
 			imageView.setImage(Utils.mat2Image(imageMat));
 
-			switch (newOperation.getType()) {
-
-				case GRAYSCALE:
-					return;
-				case CLAHE:
-					loader.setLocation(getClass().getResource("../views/claheOperation.fxml"));
-					controller = new ClaheOperationController(preprocessor, newOperation);
-					break;
-				// TODO: 25.12.2018 add adaptive threshold controls
-				// case ADAPTIVE_THRESHOLD:
-				// 	loader.setLocation(getClass().getResource("../views/adaptiveThresholdOperation.fxml"));
-				// 	controller = new AdaptiveThresholdOperationController(preprocessor, (newOperation));
-				// 	break;
-				case THRESHOLD:
-					loader.setLocation(getClass().getResource("../views/thresholdOperation.fxml"));
-					controller = new ThresholdOperationController(preprocessor, newOperation);
-					break;
-				case MORPHOLOGY:
-					loader.setLocation(getClass().getResource("../views/morphologicalOperation.fxml"));
-					controller = new MorphologicalOperationController(preprocessor, newOperation);
-					break;
-				case BLUR:
-					loader.setLocation(getClass().getResource("../views/blurOperation.fxml"));
-					controller = new BlurOperationController(preprocessor, newOperation);
-					break;
-				default:
-					return;
-			}
-
-			if (controller == null) {
-				return;
-			}
-
-			controller.addListener(this);
-			loader.setController(controller);
-			Parent controls = null;
-
-			try {
-				controls = loader.load();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			controlsContainer.getChildren().clear();
-			controlsContainer.getChildren().add(controls);
+			setCurrentOperation(newOperation);
 		});
+	}
+
+	private void setCurrentOperation(PreprocessorOperation operation) {
+		controlsContainer.getChildren().clear();
+
+		FXMLLoader loader = new FXMLLoader();
+		OperationController controller = null;
+
+		switch (operation.getType()) {
+
+			case GRAYSCALE:
+				return;
+			case CLAHE:
+				loader.setLocation(getClass().getResource("../views/claheOperation.fxml"));
+				controller = new ClaheOperationController(preprocessor, operation);
+				break;
+			// TODO: 25.12.2018 add adaptive threshold controls
+			// case ADAPTIVE_THRESHOLD:
+			// 	loader.setLocation(getClass().getResource("../views/adaptiveThresholdOperation.fxml"));
+			// 	controller = new AdaptiveThresholdOperationController(preprocessor, (newOperation));
+			// 	break;
+			case THRESHOLD:
+				loader.setLocation(getClass().getResource("../views/thresholdOperation.fxml"));
+				controller = new ThresholdOperationController(preprocessor, operation);
+				break;
+			case MORPHOLOGY:
+				loader.setLocation(getClass().getResource("../views/morphologicalOperation.fxml"));
+				controller = new MorphologicalOperationController(preprocessor, operation);
+				break;
+			case BLUR:
+				loader.setLocation(getClass().getResource("../views/blurOperation.fxml"));
+				controller = new BlurOperationController(preprocessor, operation);
+				break;
+			default:
+				return;
+		}
+
+		if (controller == null) {
+			return;
+		}
+
+		controller.addListener(this);
+		loader.setController(controller);
+		Parent controls = null;
+
+		try {
+			controls = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		controlsContainer.getChildren().add(controls);
 	}
 
 	public void setSource(Mat sourceMat) {
 		imageView.setImage(Utils.mat2Image(sourceMat));
 		operationContainer.setCenter(imageViewPane);
+		operationsList.getSelectionModel().select(0);
 	}
 
 	@Override
