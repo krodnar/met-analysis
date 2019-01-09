@@ -4,14 +4,13 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class GrayScaleOperation extends AbstractOperation {
+public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 
     public GrayScaleOperation() {
     }
 
-    public GrayScaleOperation(int index) {
-        super(index);
-    }
+	public GrayScaleOperation(GrayScaleOperation operation) {
+	}
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -21,5 +20,15 @@ public class GrayScaleOperation extends AbstractOperation {
 	@Override
 	public OperationType getType() {
 		return OperationType.GRAYSCALE;
+	}
+
+	@Override
+	protected void scaleParameters(double value) {
+
+	}
+
+	@Override
+	public GrayScaleOperation copy() {
+		return new GrayScaleOperation(this);
 	}
 }

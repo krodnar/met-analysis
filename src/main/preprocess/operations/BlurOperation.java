@@ -4,16 +4,16 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class BlurOperation extends AbstractOperation {
+public class BlurOperation extends AbstractOperation<BlurOperation> {
 
     private int kernelSize = 51;
 
-    public BlurOperation() {
-    }
+	public BlurOperation() {
+	}
 
-    public BlurOperation(int index) {
-        super(index);
-    }
+	public BlurOperation(BlurOperation operation) {
+		this.kernelSize = operation.kernelSize;
+	}
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -25,11 +25,30 @@ public class BlurOperation extends AbstractOperation {
 		return OperationType.BLUR;
 	}
 
+	@Override
+	protected void scaleParameters(double value) {
+		scaleKernelSize(value);
+	}
+
+	private void scaleKernelSize(double value) {
+		kernelSize *= value;
+
+		if (kernelSize % 2 != 1) {
+			kernelSize += 1;
+		}
+	}
+
+	@Override
+	public BlurOperation copy() {
+		return new BlurOperation(this);
+	}
+
 	public int getKernelSize() {
         return kernelSize;
     }
 
     public void setKernelSize(int kernelSize) {
         this.kernelSize = kernelSize;
+		scaleKernelSize(getScaleValue());
     }
 }

@@ -3,6 +3,7 @@ package main.controllers.operations;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import main.preprocess.ImagePreprocessor;
+import main.preprocess.PreprocessorOperation;
 import main.preprocess.operations.MorphologicalOperation;
 import org.opencv.core.Size;
 
@@ -14,12 +15,12 @@ public class MorphologicalOperationController extends OperationController<Morpho
     @FXML
     private Slider ellipseSizeSlider;
 
-    public MorphologicalOperationController(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
+    public MorphologicalOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<MorphologicalOperation> operation) {
         super(preprocessor, operation);
     }
 
     @Override
-    public void setControlsValues(MorphologicalOperation operation) {
+    public void setControlsValues(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
         double crossSize = operation.getCrossSize().height;
         crossSizeSlider.setValue(crossSize);
 
@@ -28,7 +29,7 @@ public class MorphologicalOperationController extends OperationController<Morpho
     }
 
     @Override
-    public void setControlsListeners(MorphologicalOperation operation) {
+    public void setControlsListeners(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
         crossSizeSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
             Size newSize = new Size(newValue.doubleValue(), newValue.doubleValue());
             operation.setCrossSize(newSize);

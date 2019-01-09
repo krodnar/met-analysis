@@ -6,16 +6,16 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
-public class ClaheOperation extends AbstractOperation {
+public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
     public ClaheOperation() {
     }
 
-    public ClaheOperation(int index) {
-        super(index);
+    public ClaheOperation(ClaheOperation operation) {
+        this.clahe = Imgproc.createCLAHE(operation.getClipLimit(), operation.getTilesSize().clone());
     }
 
-    private final CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
+    private CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -27,8 +27,25 @@ public class ClaheOperation extends AbstractOperation {
 		return OperationType.CLAHE;
 	}
 
-	public void setTilesSize(Size tilesSize) {
+    @Override
+    protected void scaleParameters(double value) {
+        scaleTileSize(value);
+    }
+
+    private void scaleTileSize(double value) {
+        double height = clahe.getTilesGridSize().height;
+        Size scaledSize = new Size(height * value, height * value);
+        clahe.setTilesGridSize(scaledSize);
+    }
+
+    @Override
+    public ClaheOperation copy() {
+        return new ClaheOperation(this);
+    }
+
+    public void setTilesSize(Size tilesSize) {
         clahe.setTilesGridSize(tilesSize);
+        scaleTileSize(getScaleValue());
     }
 
     public void setClipLimit(double clipLimit) {

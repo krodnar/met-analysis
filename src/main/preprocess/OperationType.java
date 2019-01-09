@@ -4,12 +4,42 @@ import main.preprocess.operations.*;
 
 public enum OperationType {
 
-	GRAYSCALE("Grayscale"),
-	CLAHE("CLAHE"),
-	ADAPTIVE_THRESHOLD("Adaptive Threshold"),
-	THRESHOLD("Threshold"),
-	MORPHOLOGY("Morphological"),
-	BLUR("Blur");
+	GRAYSCALE("Grayscale"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new GrayScaleOperation();
+		}
+	},
+	CLAHE("CLAHE"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new ClaheOperation();
+		}
+	},
+	ADAPTIVE_THRESHOLD("Adaptive Threshold"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new AdaptiveThresholdOperation();
+		}
+	},
+	THRESHOLD("Threshold"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new ThresholdOperation();
+		}
+	},
+	MORPHOLOGY("Morphological"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new MorphologicalOperation();
+		}
+	},
+	BLUR("Blur"){
+		@Override
+		public <T extends ImageOperation<T>> T getInstance() {
+			return (T) new BlurOperation();
+		}
+	};
 
 	private String name;
 
@@ -17,37 +47,7 @@ public enum OperationType {
 		this.name = name;
 	}
 
-	public static PreprocessorOperation createOperation(OperationType operationType) {
-		switch (operationType) {
-
-			case GRAYSCALE:
-				return new GrayScaleOperation();
-			case CLAHE:
-				return new ClaheOperation();
-			case ADAPTIVE_THRESHOLD:
-				return new AdaptiveThresholdOperation();
-			case THRESHOLD:
-				return new ThresholdOperation();
-			case MORPHOLOGY:
-				return new MorphologicalOperation();
-			case BLUR:
-				return new BlurOperation();
-			default:
-				return null;
-		}
-	}
-
-	public PreprocessorOperation createOperation(int index) {
-		PreprocessorOperation operation = OperationType.createOperation(this);
-		if (operation != null) {
-			operation.setIndex(index);
-		}
-		return operation;
-	}
-
-	public PreprocessorOperation createOperation() {
-		return OperationType.createOperation(this);
-	}
+	public abstract <T extends ImageOperation<T>> T getInstance();
 
 	public String getName() {
 		return name;

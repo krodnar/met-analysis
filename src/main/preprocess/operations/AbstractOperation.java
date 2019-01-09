@@ -2,20 +2,10 @@ package main.preprocess.operations;
 
 import org.opencv.core.Mat;
 
-public abstract class AbstractOperation implements PreprocessorOperation {
+public abstract class AbstractOperation<T extends ImageOperation<T>> implements ImageOperation<T> {
 
-	private int index = -1;
-
-	public AbstractOperation() {
-	}
-
-	public AbstractOperation(int index) {
-		this.index = index;
-	}
-
-	public boolean isQueued() {
-		return index != -1;
-	}
+	private boolean scaled;
+	private double scaleValue = 1;
 
 	@Override
 	public Mat process(Mat mat) {
@@ -25,12 +15,28 @@ public abstract class AbstractOperation implements PreprocessorOperation {
 	}
 
 	@Override
-	public void setIndex(int index) {
-		this.index = index;
+	public void scale(double value) {
+		scaleValue = value;
+		scaled = true;
+		scaleParameters(value);
+	}
+
+	protected abstract void scaleParameters(double value);
+
+	@Override
+	public void unscale() {
+		scale(1 / scaleValue);
+		scaleValue = 1;
+		scaled = false;
 	}
 
 	@Override
-	public int getIndex() {
-		return index;
+	public double getScaleValue() {
+		return scaleValue;
+	}
+
+	@Override
+	public boolean isScaled() {
+		return scaled;
 	}
 }

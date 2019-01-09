@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import main.preprocess.ImagePreprocessor;
+import main.preprocess.PreprocessorOperation;
 import main.preprocess.operations.ThresholdOperation;
 import org.opencv.imgproc.Imgproc;
 
@@ -14,12 +15,12 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	@FXML
 	private CheckBox invertCheckbox;
 
-	public ThresholdOperationController(ImagePreprocessor preprocessor, ThresholdOperation operation) {
+	public ThresholdOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ThresholdOperation> operation) {
 		super(preprocessor, operation);
 	}
 
 	@Override
-	public void setControlsValues(ThresholdOperation operation) {
+	public void setControlsValues(ImagePreprocessor preprocessor, ThresholdOperation operation) {
 		double threshold = operation.getThreshold();
 		thresholdSlider.setValue(threshold);
 
@@ -31,7 +32,7 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	}
 
 	@Override
-	public void setControlsListeners(ThresholdOperation operation) {
+	public void setControlsListeners(ImagePreprocessor preprocessor, ThresholdOperation operation) {
 		thresholdSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			operation.setThreshold(newValue.doubleValue());
 			applyOperation();
