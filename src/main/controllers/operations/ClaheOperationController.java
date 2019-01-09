@@ -2,8 +2,9 @@ package main.controllers.operations;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
-import main.preprocess.operations.ClaheOperation;
 import main.preprocess.ImagePreprocessor;
+import main.preprocess.PreprocessorOperation;
+import main.preprocess.operations.ClaheOperation;
 import org.opencv.core.Size;
 
 public class ClaheOperationController extends OperationController<ClaheOperation> {
@@ -14,12 +15,12 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	@FXML
 	private Slider tileSizeSlider;
 
-	public ClaheOperationController(ImagePreprocessor preprocessor, ClaheOperation operation) {
+	public ClaheOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ClaheOperation> operation) {
 		super(preprocessor, operation);
 	}
 
 	@Override
-	public void setControlsValues(ClaheOperation operation) {
+	public void setControlsValues(ImagePreprocessor preprocessor, ClaheOperation operation) {
 		double clipLimit = operation.getClipLimit();
 		clipLimitSlider.setValue(clipLimit);
 
@@ -28,7 +29,7 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	}
 
 	@Override
-	public void setControlsListeners(ClaheOperation operation) {
+	public void setControlsListeners(ImagePreprocessor preprocessor, ClaheOperation operation) {
 		clipLimitSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			operation.setClipLimit(newValue.doubleValue());
 			applyOperation();

@@ -4,7 +4,7 @@ import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-public class ThresholdOperation extends AbstractOperation {
+public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 
     private int thresholdType = Imgproc.THRESH_BINARY;
     private double threshold;
@@ -13,8 +13,9 @@ public class ThresholdOperation extends AbstractOperation {
         threshold = getOptimalThresh();
     }
 
-    public ThresholdOperation(int index) {
-        super(index);
+    public ThresholdOperation(ThresholdOperation operation) {
+        this.thresholdType = operation.thresholdType;
+        this.threshold = operation.threshold;
     }
 
     @Override
@@ -27,7 +28,17 @@ public class ThresholdOperation extends AbstractOperation {
 		return OperationType.THRESHOLD;
 	}
 
-	public void setOptimalThresh() {
+    @Override
+    protected void scaleParameters(double value) {
+
+    }
+
+    @Override
+    public ThresholdOperation copy() {
+        return new ThresholdOperation(this);
+    }
+
+    public void setOptimalThresh() {
         threshold = getOptimalThresh();
     }
 
