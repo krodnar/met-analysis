@@ -23,7 +23,12 @@ public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 	}
 
 	@Override
-	protected void scaleParameters(double value) {
+	protected void scaleParameters(double coefficient) {
+
+	}
+
+	@Override
+	protected void unscaleParameters(double coefficient) {
 
 	}
 

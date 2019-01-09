@@ -1,6 +1,7 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.SizeParameter;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.CLAHE;
@@ -8,14 +9,17 @@ import org.opencv.imgproc.Imgproc;
 
 public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
+    private CLAHE clahe;
+    private SizeParameter tileSize;
+
     public ClaheOperation() {
+        tileSize = new SizeParameter(new Size(8, 8));
+        clahe = Imgproc.createCLAHE(2, tileSize.getValue());
     }
 
     public ClaheOperation(ClaheOperation operation) {
         this.clahe = Imgproc.createCLAHE(operation.getClipLimit(), operation.getTilesSize().clone());
     }
-
-    private CLAHE clahe = Imgproc.createCLAHE(2, new Size(8, 8));
 
     @Override
     public void apply(Mat src, Mat dst) {
@@ -28,14 +32,15 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 	}
 
     @Override
-    protected void scaleParameters(double value) {
-        scaleTileSize(value);
+    protected void scaleParameters(double coefficient) {
+        tileSize.scale(coefficient);
+        clahe.setTilesGridSize(tileSize.getValue());
     }
 
-    private void scaleTileSize(double value) {
-        double height = clahe.getTilesGridSize().height;
-        Size scaledSize = new Size(height * value, height * value);
-        clahe.setTilesGridSize(scaledSize);
+    @Override
+    protected void unscaleParameters(double coefficient) {
+        tileSize.unscale();
+        clahe.setTilesGridSize(tileSize.getValue());
     }
 
     @Override
@@ -44,8 +49,8 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
     }
 
     public void setTilesSize(Size tilesSize) {
-        clahe.setTilesGridSize(tilesSize);
-        scaleTileSize(getScaleValue());
+        this.tileSize.setValue(tilesSize);
+        clahe.setTilesGridSize(this.tileSize.getValue());
     }
 
     public void setClipLimit(double clipLimit) {

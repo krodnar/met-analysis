@@ -11,11 +11,11 @@ public interface ImageOperation<T extends ImageOperation<T>> {
 
 	OperationType getType();
 
-	void scale(double value);
+	void scale(double coefficient);
 
 	void unscale();
 
-	double getScaleValue();
+	double getScaling();
 
 	boolean isScaled();
 

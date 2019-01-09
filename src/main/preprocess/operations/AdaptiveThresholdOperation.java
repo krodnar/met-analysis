@@ -1,14 +1,16 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.IntParameter;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresholdOperation> {
 
+    private IntParameter blockSize = new IntParameter();
+
     private int adaptiveMethod = Imgproc.ADAPTIVE_THRESH_MEAN_C;
     private int thresholdType = Imgproc.THRESH_BINARY;
-    private int blockSize;
     private double subConstant;
 
     public AdaptiveThresholdOperation() {
@@ -23,7 +25,7 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 
     @Override
     public void apply(Mat src, Mat dst) {
-        Imgproc.adaptiveThreshold(src, dst, 255, adaptiveMethod, thresholdType, blockSize, subConstant);
+        Imgproc.adaptiveThreshold(src, dst, 255, adaptiveMethod, thresholdType, blockSize.getValue(), subConstant);
     }
 
 	@Override
@@ -32,12 +34,13 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 	}
 
     @Override
-    protected void scaleParameters(double value) {
-        scaleBlockSize(value);
+    protected void scaleParameters(double coefficient) {
+        blockSize.scale(coefficient);
     }
 
-    private void scaleBlockSize(double value) {
-        blockSize *= value;
+    @Override
+    protected void unscaleParameters(double coefficient) {
+        blockSize.unscale();
     }
 
     @Override
@@ -62,12 +65,11 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
     }
 
     public int getBlockSize() {
-        return blockSize;
+        return blockSize.getValue();
     }
 
     public void setBlockSize(int blockSize) {
-        this.blockSize = blockSize;
-        scaleBlockSize(getScaleValue());
+        this.blockSize.setValue(blockSize);
     }
 
     public double getSubConstant() {

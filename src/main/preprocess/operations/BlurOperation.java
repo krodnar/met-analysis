@@ -1,12 +1,13 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.OddIntParameter;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 public class BlurOperation extends AbstractOperation<BlurOperation> {
 
-    private int kernelSize = 51;
+	private OddIntParameter kernelSize = new OddIntParameter(51);
 
 	public BlurOperation() {
 	}
@@ -15,10 +16,10 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 		this.kernelSize = operation.kernelSize;
 	}
 
-    @Override
-    public void apply(Mat src, Mat dst) {
-        Imgproc.medianBlur(src, dst, kernelSize);
-    }
+	@Override
+	public void apply(Mat src, Mat dst) {
+		Imgproc.medianBlur(src, dst, kernelSize.getValue());
+	}
 
 	@Override
 	public OperationType getType() {
@@ -26,16 +27,13 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	}
 
 	@Override
-	protected void scaleParameters(double value) {
-		scaleKernelSize(value);
+	protected void scaleParameters(double coefficient) {
+		kernelSize.scale(coefficient);
 	}
 
-	private void scaleKernelSize(double value) {
-		kernelSize *= value;
-
-		if (kernelSize % 2 != 1) {
-			kernelSize += 1;
-		}
+	@Override
+	protected void unscaleParameters(double coefficient) {
+		kernelSize.unscale();
 	}
 
 	@Override
@@ -44,11 +42,10 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	}
 
 	public int getKernelSize() {
-        return kernelSize;
-    }
+		return kernelSize.getValue();
+	}
 
-    public void setKernelSize(int kernelSize) {
-        this.kernelSize = kernelSize;
-		scaleKernelSize(getScaleValue());
-    }
+	public void setKernelSize(int kernelSize) {
+		this.kernelSize.setValue(kernelSize);
+	}
 }
