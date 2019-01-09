@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.ContoursController">
-   <center>
-      <Label text="Open image using &quot;File -&gt; Open&quot;" BorderPane.alignment="CENTER" />
-   </center>
-</BorderPane>
+<SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.ContoursController">
+   <items>
+      <TableView fx:id="contoursTable" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="contourIndex" prefWidth="75.0" text="index" />
+            <TableColumn fx:id="contourArea" prefWidth="75.0" text="area" />
+        </columns>
+      </TableView>
+      <BorderPane fx:id="root">
+         <center>
+            <Label text="Open image using &quot;File -&gt; Open&quot;" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </items>
+</SplitPane>
