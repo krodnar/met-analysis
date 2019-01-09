@@ -5,7 +5,7 @@ import org.opencv.core.Mat;
 public abstract class AbstractOperation<T extends ImageOperation<T>> implements ImageOperation<T> {
 
 	private boolean scaled;
-	private double scaleValue = 1;
+	private double scaleCoefficient = 1;
 
 	@Override
 	public Mat process(Mat mat) {
@@ -15,28 +15,38 @@ public abstract class AbstractOperation<T extends ImageOperation<T>> implements 
 	}
 
 	@Override
-	public void scale(double value) {
-		scaleValue = value;
-		scaled = true;
-		scaleParameters(value);
-	}
+	public void scale(double coefficient) {
+		if (scaled) {
+			return;
+		}
 
-	protected abstract void scaleParameters(double value);
+		scaleCoefficient = coefficient;
+		scaled = true;
+		scaleParameters(coefficient);
+	}
 
 	@Override
 	public void unscale() {
-		scale(1 / scaleValue);
-		scaleValue = 1;
+		if (!scaled) {
+			return;
+		}
+
+		unscaleParameters(scaleCoefficient);
+		scaleCoefficient = 1;
 		scaled = false;
 	}
 
 	@Override
-	public double getScaleValue() {
-		return scaleValue;
+	public double getScaling() {
+		return scaleCoefficient;
 	}
 
 	@Override
 	public boolean isScaled() {
 		return scaled;
 	}
+
+	protected abstract void scaleParameters(double coefficient);
+
+	protected abstract void unscaleParameters(double coefficient);
 }

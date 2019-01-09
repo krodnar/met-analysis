@@ -1,14 +1,15 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.SizeParameter;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class MorphologicalOperation extends AbstractOperation<MorphologicalOperation> {
 
-    private Size crossSize;
-    private Size ellipseSize;
+    private SizeParameter crossSize = new SizeParameter();
+    private SizeParameter ellipseSize = new SizeParameter();
 
     private Mat kernelCross;
     private Mat kernelEllipse;
@@ -19,8 +20,8 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     }
 
     public MorphologicalOperation(MorphologicalOperation operation) {
-        this.crossSize = operation.crossSize.clone();
-        this.ellipseSize = operation.ellipseSize.clone();
+        this.crossSize = new SizeParameter(operation.crossSize);
+        this.ellipseSize = new SizeParameter(operation.ellipseSize);
         this.kernelCross = operation.kernelCross.clone();
         this.kernelEllipse = operation.kernelEllipse.clone();
     }
@@ -37,21 +38,19 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
 	}
 
     @Override
-    protected void scaleParameters(double value) {
-        scaleCrossSize(value);
-        scaleEllipseSize(value);
+    protected void scaleParameters(double coefficient) {
+        crossSize.scale(coefficient);
+        ellipseSize.scale(coefficient);
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
     }
 
-    private void scaleEllipseSize(double value) {
-        ellipseSize.width = ellipseSize.width * value;
-        ellipseSize.height = ellipseSize.height * value;
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
-    }
-
-    private void scaleCrossSize(double value) {
-        crossSize.width = crossSize.width * value;
-        crossSize.height = crossSize.height * value;
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
+    @Override
+    protected void unscaleParameters(double coefficient) {
+        crossSize.unscale();
+        ellipseSize.unscale();
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
     }
 
     @Override
@@ -60,22 +59,20 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     }
 
     public void setEllipseSize(Size size) {
-        ellipseSize = size;
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize);
-        scaleEllipseSize(getScaleValue());
+        ellipseSize.setValue(size);
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
     }
 
     public void setCrossSize(Size size) {
-        crossSize = size;
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize);
-        scaleCrossSize(getScaleValue());
+        crossSize.setValue(size);
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
     }
 
     public Size getCrossSize() {
-        return crossSize;
+        return crossSize.getValue();
     }
 
     public Size getEllipseSize() {
-        return ellipseSize;
+        return ellipseSize.getValue();
     }
 }
