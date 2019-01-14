@@ -1,21 +1,25 @@
 package main.preprocess.parameters;
 
-public class IntParameter extends AbstractParameter<Integer> {
+public class IntParameter extends BaseScalableParameter<Integer> {
 
 	public IntParameter() {
-		value = 0;
+		this(0);
 	}
 
 	public IntParameter(Integer value) {
 		super(value);
 	}
 
+	public IntParameter(Integer value, String name) {
+		super(value, name);
+	}
+
 	public IntParameter(IntParameter parameter) {
-		this.value = parameter.value;
+		setValue(parameter.getValue());
 	}
 
 	@Override
-	protected void scaleValue(double scaleCoefficient) {
-		value = (int) (value * scaleCoefficient);
+	protected Integer scaleValue(Integer value, double coefficient) {
+		return (int) (value * coefficient);
 	}
 }
