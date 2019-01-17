@@ -29,7 +29,7 @@ public abstract class OperationController<T extends ImageOperation<T>> implement
 	}
 
 	public void applyOperation() {
-		operation.apply();
+		operation.process();
 		fireOnApply();
 	}
 
@@ -41,13 +41,13 @@ public abstract class OperationController<T extends ImageOperation<T>> implement
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		setControlsValues(preprocessor, operation.getImageOperation());
-		setControlsListeners(preprocessor, operation.getImageOperation());
+		setControlsValues(operation, operation.getImageOperation());
+		setControlsListeners(operation, operation.getImageOperation());
 	}
 
-	public abstract void setControlsValues(ImagePreprocessor preprocessor, T operation);
+	public abstract void setControlsValues(PreprocessorOperation preprocessorOperation, T operation);
 
-	public abstract void setControlsListeners(ImagePreprocessor preprocessor, T operation);
+	public abstract void setControlsListeners(PreprocessorOperation preprocessorOperation, T operation);
 
 	public interface OperationControlsListener {
 

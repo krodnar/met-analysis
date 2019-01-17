@@ -10,6 +10,7 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	private OddIntParameter kernelSize = new OddIntParameter(51);
 
 	public BlurOperation() {
+		kernelSize.setListener((parameter, oldValue, newValue) -> fireOnChange());
 	}
 
 	public BlurOperation(BlurOperation operation) {

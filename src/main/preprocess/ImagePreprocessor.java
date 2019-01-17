@@ -16,8 +16,6 @@ public class ImagePreprocessor {
 	private Mat sourceMat;
 	private List<PreprocessorOperation> operations = new LinkedList<>();
 
-	private int lastOperationIndex = 0;
-
 	private boolean scaled;
 	private Mat unscaledMat;
 
@@ -49,61 +47,26 @@ public class ImagePreprocessor {
 
 	private void initOperations(List<OperationType> operationTypes) {
 		for (int i = 0; i < operationTypes.size(); i++) {
-			operations.add(wrapOperation(i, operationTypes.get(i)));
+			operations.add(wrapOperation(operationTypes.get(i)));
+		}
+
+		for (int i = 0; i < operations.size() - 1; i++) {
+			PreprocessorOperation current = operations.get(i);
+			PreprocessorOperation next = operations.get(i + 1);
+			current.setNext(next);
 		}
 	}
 
 	public void fullProcess() {
-		applyOperationsFrom(0);
+		applyOperationsFrom(operations.get(0));
 	}
 
 	public void finishProcessing() {
-		if (lastOperationIndex == operations.size() - 1) {
-			return;
-		}
-
-		applyOperationsFrom(lastOperationIndex + 1);
-	}
-
-	public void applyOperationsFrom(int operationIndex) {
-		for (int i = operationIndex; i < operations.size(); i++) {
-			applyOperation(i);
-		}
-	}
-
-	public void applyOperationFromTo(int startIndex, int endIndex) {
-		for (int i = startIndex; i < endIndex; i++) {
-			applyOperation(i);
-		}
-	}
-
-	public void applySingleOperation(int operationIndex) {
-		applyOperation(operationIndex);
+		fullProcess();
 	}
 
 	public void applyOperationsFrom(PreprocessorOperation operation) {
-		applyOperationsFrom(operation.getIndex());
-	}
-
-	public void applyOperationFromTo(PreprocessorOperation start, PreprocessorOperation end) {
-		applyOperationFromTo(start.getIndex(), end.getIndex());
-	}
-
-	public void applySingleOperation(PreprocessorOperation operation) {
-		applySingleOperation(operation.getIndex());
-	}
-
-	private void applyOperation(int operationIndex) {
-		if (sourceMat == null) {
-			throw new IllegalStateException("No source image is provided.");
-		}
-
-		if (operationIndex < 0 || operationIndex >= operations.size()) {
-			throw new IllegalArgumentException(String.format("Operation index %d is out of range", operationIndex));
-		}
-
-		getOperation(operationIndex).apply();
-		lastOperationIndex = operationIndex;
+		operation.apply();
 	}
 
 	public void scale(double value) {
@@ -137,53 +100,53 @@ public class ImagePreprocessor {
 		scaled = false;
 	}
 
-	public void addOperation(int index, OperationType operationType) {
-		operations.add(index, wrapOperation(index, operationType));
+	public void addOperation(int index, PreprocessorOperation operation) {
+		PreprocessorOperation curr = operations.get(index);
+		operation.setNext(curr);
 
-		for (int i = index; i < operations.size(); i++) {
-			operations.get(i).setIndex(i);
+		if (operations.size() > 1) {
+			PreprocessorOperation prev = operations.get(index - 1);
+			prev.setNext(operation);
 		}
 
-		applyOperationsFrom(index);
+		operations.add(index, operation);
+
+		applyOperationsFrom(operation);
 	}
 
-	public void removeOperation(int index) {
-		operations.remove(index);
+	public void removeOperation(PreprocessorOperation operation) {
+		int index = operations.indexOf(operation);
 
-		for (int i = index; i < operations.size(); i++) {
-			operations.get(i).setIndex(i);
+		PreprocessorOperation prev = null;
+		if (index > 0) {
+			prev = operations.get(index - 1);
 		}
 
-		applyOperationsFrom(index);
+		PreprocessorOperation next = null;
+		if (index + 1 < operations.size()) {
+			next = operations.get(index + 1);
+		}
+
+		if (prev != null) {
+			prev.setNext(next);
+		}
+
+		operations.remove(operation);
+
+		applyOperationsFrom(next);
 	}
 
 	public void setOperations(List<OperationType> operations) {
 		initOperations(operations);
 	}
 
-	public Mat getMat(int operationIndex) {
-		if (operationIndex == -1) {
-			return sourceMat.clone();
-		}
-
-		return operations.get(operationIndex).getResult();
-	}
-
 	public Mat getMat(PreprocessorOperation operation) {
-		return getMat(operation.getIndex());
+		return operation.getResult();
 	}
 
-	private <T extends ImageOperation<T>> PreprocessorOperation<T> wrapOperation(int index, OperationType type) {
+	private <T extends ImageOperation<T>> PreprocessorOperation<T> wrapOperation(OperationType type) {
 		T operation = type.getInstance();
-		return new PreprocessorOperation<>(index, this, operation);
-	}
-
-	public PreprocessorOperation getOperation(int operationIndex) {
-		return operations.get(operationIndex);
-	}
-
-	public <T extends PreprocessorOperation> T getOperation(int operationIndex, Class<T> clazz) {
-		return clazz.cast(getOperation(operationIndex));
+		return new PreprocessorOperation<>(this, operation);
 	}
 
 	public List<PreprocessorOperation> getOperations() {

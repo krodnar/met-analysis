@@ -13,6 +13,9 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 
     public ThresholdOperation() {
         threshold.set(getOptimalThresh());
+
+        thresholdType.setListener((parameter, oldValue, newValue) -> fireOnChange());
+        threshold.setListener((parameter, oldValue, newValue) -> fireOnChange());
     }
 
     public ThresholdOperation(ThresholdOperation operation) {

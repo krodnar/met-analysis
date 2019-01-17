@@ -15,6 +15,11 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
     public ClaheOperation() {
         tileSize = new SizeParameter(new Size(8, 8));
         clahe = Imgproc.createCLAHE(2, tileSize.get());
+
+        tileSize.setListener((parameter, oldSize, newSize) -> {
+            clahe.setTilesGridSize(newSize);
+            fireOnChange();
+        });
     }
 
     public ClaheOperation(ClaheOperation operation) {
@@ -34,13 +39,11 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
     @Override
     protected void scaleParameters(double coefficient) {
         tileSize.scale(coefficient);
-        clahe.setTilesGridSize(tileSize.get());
     }
 
     @Override
     protected void unscaleParameters(double coefficient) {
         tileSize.unscale();
-        clahe.setTilesGridSize(tileSize.get());
     }
 
     @Override
@@ -50,7 +53,6 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
 
     public void setTilesSize(Size tilesSize) {
         this.tileSize.set(tilesSize);
-        clahe.setTilesGridSize(this.tileSize.get());
     }
 
     public void setClipLimit(double clipLimit) {
