@@ -14,11 +14,13 @@ public class OddIntParameter extends IntParameter {
 	}
 
 	@Override
-	protected void scaleValue(double scaleCoefficient) {
-		super.scaleValue(scaleCoefficient);
+	protected Integer scaleValue(Integer value, double coefficient) {
+		value = super.scaleValue(value, coefficient);
 
 		if (value % 2 != 1) {
 			value += 1;
 		}
+
+		return value;
 	}
 }

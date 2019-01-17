@@ -2,7 +2,7 @@ package main.preprocess.parameters;
 
 import org.opencv.core.Size;
 
-public class SizeParameter extends AbstractParameter<Size> {
+public class SizeParameter extends BaseScalableParameter<Size> {
 
 	public SizeParameter() {
 		super(new Size());
@@ -13,12 +13,14 @@ public class SizeParameter extends AbstractParameter<Size> {
 	}
 
 	public SizeParameter(SizeParameter parameter) {
-		this.value = parameter.value.clone();
+		set(parameter.get().clone());
 	}
 
 	@Override
-	protected void scaleValue(double scaleCoefficient) {
-		value.width *= scaleCoefficient;
-		value.height *= scaleCoefficient;
+	protected Size scaleValue(Size value, double coefficient) {
+		value.width *= coefficient;
+		value.height *= coefficient;
+
+		return value;
 	}
 }

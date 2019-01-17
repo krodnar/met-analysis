@@ -1,31 +1,36 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.DoubleParameter;
 import main.preprocess.parameters.IntParameter;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresholdOperation> {
 
-    private IntParameter blockSize = new IntParameter();
-
-    private int adaptiveMethod = Imgproc.ADAPTIVE_THRESH_MEAN_C;
-    private int thresholdType = Imgproc.THRESH_BINARY;
-    private double subConstant;
+    private IntParameter blockSize;
+    private IntParameter adaptiveMethod;
+    private IntParameter thresholdType;
+    private DoubleParameter subConstant;
 
     public AdaptiveThresholdOperation() {
-    }
+		blockSize = new IntParameter(20, "block");
+		adaptiveMethod = new IntParameter(Imgproc.ADAPTIVE_THRESH_MEAN_C, "method");
+		thresholdType = new IntParameter(Imgproc.THRESH_BINARY, "type");
+		subConstant = new DoubleParameter(0d, "constant");
+	}
 
     public AdaptiveThresholdOperation(AdaptiveThresholdOperation operation) {
-        this.adaptiveMethod = operation.adaptiveMethod;
-        this.thresholdType = operation.thresholdType;
-        this.blockSize = operation.blockSize;
-        this.subConstant = operation.subConstant;
+		this();
+		this.adaptiveMethod.set(operation.adaptiveMethod.get());
+		this.thresholdType.set(operation.thresholdType.get());
+		this.blockSize.set(operation.blockSize.get());
+		this.subConstant.set(operation.subConstant.get());
     }
 
     @Override
     public void apply(Mat src, Mat dst) {
-        Imgproc.adaptiveThreshold(src, dst, 255, adaptiveMethod, thresholdType, blockSize.getValue(), subConstant);
+        Imgproc.adaptiveThreshold(src, dst, 255, adaptiveMethod.get(), thresholdType.get(), blockSize.get(), subConstant.get());
     }
 
 	@Override
@@ -49,34 +54,34 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
     }
 
     public int getAdaptiveMethod() {
-        return adaptiveMethod;
+        return adaptiveMethod.get();
     }
 
     public void setAdaptiveMethod(int adaptiveMethod) {
-        this.adaptiveMethod = adaptiveMethod;
+        this.adaptiveMethod.set(adaptiveMethod);
     }
 
     public int getThresholdType() {
-        return thresholdType;
+        return thresholdType.get();
     }
 
     public void setThresholdType(int thresholdType) {
-        this.thresholdType = thresholdType;
+        this.thresholdType.set(thresholdType);
     }
 
     public int getBlockSize() {
-        return blockSize.getValue();
+        return blockSize.get();
     }
 
     public void setBlockSize(int blockSize) {
-        this.blockSize.setValue(blockSize);
+        this.blockSize.set(blockSize);
     }
 
     public double getSubConstant() {
-        return subConstant;
+        return subConstant.get();
     }
 
     public void setSubConstant(double subConstant) {
-        this.subConstant = subConstant;
+        this.subConstant.set(subConstant);
     }
 }
