@@ -18,7 +18,7 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 
 	@Override
 	public void apply(Mat src, Mat dst) {
-		Imgproc.medianBlur(src, dst, kernelSize.getValue());
+		Imgproc.medianBlur(src, dst, kernelSize.get());
 	}
 
 	@Override
@@ -42,10 +42,10 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	}
 
 	public int getKernelSize() {
-		return kernelSize.getValue();
+		return kernelSize.get();
 	}
 
 	public void setKernelSize(int kernelSize) {
-		this.kernelSize.setValue(kernelSize);
+		this.kernelSize.set(kernelSize);
 	}
 }

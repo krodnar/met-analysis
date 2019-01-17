@@ -1,26 +1,28 @@
 package main.preprocess.operations;
 
 import main.preprocess.OperationType;
+import main.preprocess.parameters.DoubleParameter;
+import main.preprocess.parameters.IntParameter;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 
-    private int thresholdType = Imgproc.THRESH_BINARY;
-    private double threshold;
+    private IntParameter thresholdType = new IntParameter(Imgproc.THRESH_BINARY_INV);
+    private DoubleParameter threshold = new DoubleParameter();
 
     public ThresholdOperation() {
-        threshold = getOptimalThresh();
+        threshold.set(getOptimalThresh());
     }
 
     public ThresholdOperation(ThresholdOperation operation) {
-        this.thresholdType = operation.thresholdType;
-        this.threshold = operation.threshold;
+        this.thresholdType.set(operation.thresholdType.get());
+        this.threshold.set(operation.threshold.get());
     }
 
     @Override
     public void apply(Mat src, Mat dst) {
-        Imgproc.threshold(src, dst, threshold, 255, thresholdType);
+        Imgproc.threshold(src, dst, threshold.get(), 255, thresholdType.get());
     }
 
 	@Override
@@ -44,7 +46,7 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
     }
 
     public void setOptimalThresh() {
-        threshold = getOptimalThresh();
+        threshold.set(getOptimalThresh());
     }
 
     public double getOptimalThresh() {
@@ -60,18 +62,18 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
     }
 
     public int getThresholdType() {
-        return thresholdType;
+        return thresholdType.get();
     }
 
     public void setThresholdType(int thresholdType) {
-        this.thresholdType = thresholdType;
+        this.thresholdType.set(thresholdType);
     }
 
     public double getThreshold() {
-        return threshold;
+        return threshold.get();
     }
 
     public void setThreshold(double threshold) {
-        this.threshold = threshold;
+        this.threshold.set(threshold);
     }
 }

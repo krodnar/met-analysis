@@ -41,16 +41,16 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     protected void scaleParameters(double coefficient) {
         crossSize.scale(coefficient);
         ellipseSize.scale(coefficient);
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
     @Override
     protected void unscaleParameters(double coefficient) {
         crossSize.unscale();
         ellipseSize.unscale();
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
     @Override
@@ -59,20 +59,20 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     }
 
     public void setEllipseSize(Size size) {
-        ellipseSize.setValue(size);
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.getValue());
+        ellipseSize.set(size);
+        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
     }
 
     public void setCrossSize(Size size) {
-        crossSize.setValue(size);
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.getValue());
+        crossSize.set(size);
+        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
     public Size getCrossSize() {
-        return crossSize.getValue();
+        return crossSize.get();
     }
 
     public Size getEllipseSize() {
-        return ellipseSize.getValue();
+        return ellipseSize.get();
     }
 }

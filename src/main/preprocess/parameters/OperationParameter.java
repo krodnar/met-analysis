@@ -2,13 +2,7 @@ package main.preprocess.parameters;
 
 public interface OperationParameter<T> {
 
-	T getValue();
+	T get();
 
-	void setValue(T value);
-
-	void scale(double coefficient);
-
-	void unscale();
-
-	double getScaling();
+	void set(T value);
 }
