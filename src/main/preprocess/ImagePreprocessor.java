@@ -1,9 +1,8 @@
 package main.preprocess;
 
+import main.preprocess.operations.GrayScaleOperation;
 import main.preprocess.operations.ImageOperation;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,9 +15,6 @@ public class ImagePreprocessor {
 	private Mat sourceMat;
 	private List<PreprocessorOperation> operations = new LinkedList<>();
 
-	private boolean scaled;
-	private Mat unscaledMat;
-
 	private List<OperationType> operationsOrder = Arrays.asList(
 			GRAYSCALE,
 			CLAHE,
@@ -28,7 +24,7 @@ public class ImagePreprocessor {
 	);
 
 	public ImagePreprocessor() {
-		this(null, false);
+		initOperations(operationsOrder);
 	}
 
 	public ImagePreprocessor(Mat sourceMat) {
@@ -39,9 +35,10 @@ public class ImagePreprocessor {
 		this.sourceMat = sourceMat;
 
 		initOperations(operationsOrder);
+		operations.get(0).setSource(sourceMat.clone());
 
 		if (process) {
-			fullProcess();
+			process();
 		}
 	}
 
@@ -53,65 +50,32 @@ public class ImagePreprocessor {
 		for (int i = 0; i < operations.size() - 1; i++) {
 			PreprocessorOperation current = operations.get(i);
 			PreprocessorOperation next = operations.get(i + 1);
-			current.setNext(next);
+			current.setChild(next);
 		}
 	}
 
-	public void fullProcess() {
-		applyOperationsFrom(operations.get(0));
-	}
-
-	public void finishProcessing() {
-		fullProcess();
-	}
-
-	public void applyOperationsFrom(PreprocessorOperation operation) {
+	public void reprocess() {
+		PreprocessorOperation operation = operations.get(0);
+		operation.setProcessed(false);
 		operation.apply();
 	}
 
-	public void scale(double value) {
-		if (scaled) {
-			throw new IllegalStateException("Image preprocessor is already scaled.");
-		}
-
-		unscaledMat = sourceMat.clone();
-		Imgproc.resize(sourceMat, sourceMat, new Size(), value, value);
-
-		for (PreprocessorOperation operation : operations) {
-			operation.scale(value);
-		}
-
-		fullProcess();
-		scaled = true;
-	}
-
-	public void unscale() {
-		if (!scaled) {
-			return;
-		}
-
-		sourceMat = unscaledMat.clone();
-
-		for (PreprocessorOperation operation : operations) {
-			operation.unscale();
-		}
-
-		fullProcess();
-		scaled = false;
+	public void process() {
+		operations.get(0).apply();
 	}
 
 	public void addOperation(int index, PreprocessorOperation operation) {
 		PreprocessorOperation curr = operations.get(index);
-		operation.setNext(curr);
+		operation.setChild(curr);
 
 		if (operations.size() > 1) {
 			PreprocessorOperation prev = operations.get(index - 1);
-			prev.setNext(operation);
+			prev.setChild(operation);
 		}
 
 		operations.add(index, operation);
 
-		applyOperationsFrom(operation);
+		operation.setProcessed(false);
 	}
 
 	public void removeOperation(PreprocessorOperation operation) {
@@ -125,36 +89,27 @@ public class ImagePreprocessor {
 		PreprocessorOperation next = null;
 		if (index + 1 < operations.size()) {
 			next = operations.get(index + 1);
+			next.setProcessed(false);
 		}
 
 		if (prev != null) {
-			prev.setNext(next);
+			prev.setChild(next);
 		}
 
 		operations.remove(operation);
-
-		applyOperationsFrom(next);
 	}
 
 	public void setOperations(List<OperationType> operations) {
 		initOperations(operations);
 	}
 
-	public Mat getMat(PreprocessorOperation operation) {
-		return operation.getResult();
-	}
-
 	private <T extends ImageOperation<T>> PreprocessorOperation<T> wrapOperation(OperationType type) {
 		T operation = type.getInstance();
-		return new PreprocessorOperation<>(this, operation);
+		return new PreprocessorOperation<>(operation);
 	}
 
 	public List<PreprocessorOperation> getOperations() {
 		return operations;
-	}
-
-	public List<OperationType> getOperationsOrder() {
-		return operationsOrder;
 	}
 
 	public void setSourceMat(Mat sourceMat) {
@@ -163,9 +118,10 @@ public class ImagePreprocessor {
 
 	public void setSourceMat(Mat sourceMat, boolean process) {
 		this.sourceMat = sourceMat;
+		operations.get(0).setSource(sourceMat.clone());
 
 		if (process) {
-			fullProcess();
+			process();
 		}
 	}
 
@@ -175,10 +131,6 @@ public class ImagePreprocessor {
 
 	public Mat getProcessedMat() {
 		return operations.get(operations.size() - 1).getResult().clone();
-	}
-
-	public boolean isScaled() {
-		return scaled;
 	}
 
 	public boolean isReady() {

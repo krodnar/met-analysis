@@ -59,10 +59,10 @@ public class OperationsController implements Initializable, OperationController.
 			}
 
 			if (oldOperation != null) {
-				preprocessor.applyOperationsFrom(oldOperation);
+				oldOperation.apply();
 			}
 
-			Mat imageMat = preprocessor.getMat(newOperation);
+			Mat imageMat = newOperation.getResult();
 			imageView.setImage(Utils.mat2Image(imageMat));
 
 			setCurrentOperation(newOperation);

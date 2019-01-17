@@ -8,8 +8,8 @@ import org.opencv.imgproc.Imgproc;
 
 public class PreprocessorOperation<T extends ImageOperation<T>> {
 
-	private ImagePreprocessor preprocessor;
-	private PreprocessorOperation next;
+	private PreprocessorOperation parent;
+	private PreprocessorOperation child;
 	private T operation;
 
 	private Mat sourceMat;
@@ -19,8 +19,7 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 	private boolean scaled = false;
 	private boolean processed = false;
 
-	public PreprocessorOperation(ImagePreprocessor preprocessor, T operation) {
-		this.preprocessor = preprocessor;
+	public PreprocessorOperation(T operation) {
 		this.operation = operation;
 
 		if (operation instanceof ObservableOperation) {
@@ -33,20 +32,19 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 			return;
 		}
 
-		operation.apply(getSource(), resultMat);
+		operation.apply(sourceMat, resultMat);
 
-		if (next != null) {
-			next.setSource(resultMat);
+		if (child != null) {
+			child.setSource(resultMat);
 		}
 
 		processed = true;
-		System.out.println("Applied " + operation.getType().toString());
 	}
 
 	public void apply() {
 		process();
-		if (next != null) {
-			next.apply();
+		if (child != null) {
+			child.apply();
 		}
 	}
 
@@ -64,7 +62,7 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 			return false;
 		}
 
-		unscaledSource = getSource().clone();
+		unscaledSource = sourceMat.clone();
 		Imgproc.resize(sourceMat, sourceMat, new Size(), value, value);
 
 		operation.scale(value);
@@ -89,10 +87,6 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 		return operation.getType();
 	}
 
-	public ImagePreprocessor getPreprocessor() {
-		return preprocessor;
-	}
-
 	public T getImageOperation() {
 		return operation;
 	}
@@ -105,13 +99,29 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 		return scaled;
 	}
 
-	public PreprocessorOperation getNext() {
-		return next;
+	public PreprocessorOperation getChild() {
+		return child;
 	}
 
-	public void setNext(PreprocessorOperation next) {
-		this.next = next;
-		next.setSource(resultMat);
+	public void setChild(PreprocessorOperation child) {
+		this.child = child;
+
+		if (child != null) {
+			child.parent = this;
+			child.setSource(resultMat);
+		}
+	}
+
+	public PreprocessorOperation getParent() {
+		return parent;
+	}
+
+	public void setParent(PreprocessorOperation parent) {
+		this.parent = parent;
+
+		if (parent != null) {
+			parent.child = this;
+		}
 	}
 
 	public boolean isProcessed() {
@@ -121,12 +131,8 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 	public void setProcessed(boolean processed) {
 		this.processed = processed;
 
-		if (!processed && next != null) {
-			next.setProcessed(false);
+		if (!processed && child != null) {
+			child.setProcessed(false);
 		}
-	}
-
-	private Mat getSource() {
-		return sourceMat == null ? preprocessor.getSource() : sourceMat;
 	}
 }
