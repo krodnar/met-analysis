@@ -2,7 +2,7 @@ package main.preprocess.parameters;
 
 public interface OperationParameter<T> {
 
-	T getValue();
+	T get();
 
-	void setValue(T value);
+	void set(T value);
 }

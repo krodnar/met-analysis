@@ -13,7 +13,7 @@ public class SizeParameter extends BaseScalableParameter<Size> {
 	}
 
 	public SizeParameter(SizeParameter parameter) {
-		setValue(parameter.getValue().clone());
+		set(parameter.get().clone());
 	}
 
 	@Override

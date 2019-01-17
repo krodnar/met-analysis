@@ -15,7 +15,7 @@ public class IntParameter extends BaseScalableParameter<Integer> {
 	}
 
 	public IntParameter(IntParameter parameter) {
-		setValue(parameter.getValue());
+		set(parameter.get());
 	}
 
 	@Override

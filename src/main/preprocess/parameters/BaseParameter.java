@@ -23,12 +23,12 @@ public class BaseParameter<T> implements OperationParameter<T> {
 	}
 
 	@Override
-	public T getValue() {
+	public T get() {
 		return value.get();
 	}
 
 	@Override
-	public void setValue(T value) {
+	public void set(T value) {
 		this.value.set(value);
 	}
 

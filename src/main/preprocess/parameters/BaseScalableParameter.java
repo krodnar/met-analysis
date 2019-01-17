@@ -17,12 +17,12 @@ public abstract class BaseScalableParameter<T> extends BaseParameter<T> implemen
 	}
 
 	@Override
-	public void setValue(T value) {
+	public void set(T value) {
 		if (isScaled()) {
 			value = scaleValue(value, scaleCoefficient);
 		}
 
-		super.setValue(value);
+		super.set(value);
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public abstract class BaseScalableParameter<T> extends BaseParameter<T> implemen
 		}
 
 		this.scaleCoefficient *= coefficient;
-		T scaledValue = scaleValue(getValue(), coefficient);
-		super.setValue(scaledValue);
+		T scaledValue = scaleValue(get(), coefficient);
+		super.set(scaledValue);
 	}
 
 	@Override
@@ -42,9 +42,9 @@ public abstract class BaseScalableParameter<T> extends BaseParameter<T> implemen
 			return;
 		}
 
-		T unscaledValue = unscaleValue(getValue(), scaleCoefficient);
+		T unscaledValue = unscaleValue(get(), scaleCoefficient);
 		this.scaleCoefficient = 1;
-		super.setValue(unscaledValue);
+		super.set(unscaledValue);
 	}
 
 	@Override
