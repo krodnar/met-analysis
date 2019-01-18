@@ -9,14 +9,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public abstract class OperationController<T extends ImageOperation<T>> implements Initializable {
+public abstract class OperationController<T extends ImageOperation> implements Initializable {
 
-	private ImagePreprocessor preprocessor;
 	private PreprocessorOperation<T> operation;
 	private ArrayList<OperationControlsListener> listeners = new ArrayList<>();
 
-	public OperationController(ImagePreprocessor preprocessor, PreprocessorOperation<T> operation) {
-		this.preprocessor = preprocessor;
+	public OperationController(PreprocessorOperation<T> operation) {
 		this.operation = operation;
 	}
 

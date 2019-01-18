@@ -1,6 +1,6 @@
 package main.preprocess.operations;
 
-public interface ObservableOperation<T extends ImageOperation<T>> extends ImageOperation<T> {
+public interface ObservableOperation<T extends ImageOperation> extends ImageOperation {
 
 	void addObserver(OperationObserver observer);
 

@@ -46,12 +46,7 @@ public class ClaheOperation extends AbstractOperation<ClaheOperation> {
         tileSize.unscale();
     }
 
-    @Override
-    public ClaheOperation copy() {
-        return new ClaheOperation(this);
-    }
-
-    public void setTilesSize(Size tilesSize) {
+	public void setTilesSize(Size tilesSize) {
         this.tileSize.set(tilesSize);
     }
 

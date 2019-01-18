@@ -5,7 +5,7 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractOperation<T extends ImageOperation<T>> implements ObservableOperation<T> {
+public abstract class AbstractOperation<T extends ImageOperation> implements ObservableOperation<T> {
 
 	private boolean scaled;
 	private double scaleCoefficient = 1;

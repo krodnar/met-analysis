@@ -6,7 +6,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class PreprocessorOperation<T extends ImageOperation<T>> {
+public class PreprocessorOperation<T extends ImageOperation> {
 
 	private PreprocessorOperation parent;
 	private PreprocessorOperation child;
@@ -30,6 +30,10 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 	public void process() {
 		if (isProcessed()) {
 			return;
+		}
+
+		if ((parent != null) && (!parent.isProcessed())) {
+			parent.process();
 		}
 
 		operation.apply(sourceMat, resultMat);
@@ -121,6 +125,7 @@ public class PreprocessorOperation<T extends ImageOperation<T>> {
 
 		if (parent != null) {
 			parent.child = this;
+			setSource(parent.resultMat);
 		}
 	}
 

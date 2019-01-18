@@ -31,9 +31,4 @@ public class GrayScaleOperation extends AbstractOperation<GrayScaleOperation> {
 	protected void unscaleParameters(double coefficient) {
 
 	}
-
-	@Override
-	public GrayScaleOperation copy() {
-		return new GrayScaleOperation(this);
-	}
 }

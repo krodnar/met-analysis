@@ -1,30 +1,20 @@
 package main.preprocess;
 
-import main.preprocess.operations.GrayScaleOperation;
-import main.preprocess.operations.ImageOperation;
+import main.preprocess.operations.*;
 import org.opencv.core.Mat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import static main.preprocess.OperationType.*;
 
 public class ImagePreprocessor {
 
 	private Mat sourceMat;
 	private List<PreprocessorOperation> operations = new LinkedList<>();
 
-	private List<OperationType> operationsOrder = Arrays.asList(
-			GRAYSCALE,
-			CLAHE,
-			THRESHOLD,
-			MORPHOLOGY,
-			BLUR
-	);
-
 	public ImagePreprocessor() {
-		initOperations(operationsOrder);
+		this(null, false);
 	}
 
 	public ImagePreprocessor(Mat sourceMat) {
@@ -32,25 +22,21 @@ public class ImagePreprocessor {
 	}
 
 	public ImagePreprocessor(Mat sourceMat, boolean process) {
-		this.sourceMat = sourceMat;
+		setOperations(Arrays.asList(
+				new GrayScaleOperation(),
+				new ClaheOperation(),
+				new ThresholdOperation(),
+				new MorphologicalOperation(),
+				new BlurOperation()
+		));
 
-		initOperations(operationsOrder);
-		operations.get(0).setSource(sourceMat.clone());
+		if (sourceMat != null) {
+			this.sourceMat = sourceMat;
+			operations.get(0).setSource(sourceMat.clone());
 
-		if (process) {
-			process();
-		}
-	}
-
-	private void initOperations(List<OperationType> operationTypes) {
-		for (int i = 0; i < operationTypes.size(); i++) {
-			operations.add(wrapOperation(operationTypes.get(i)));
-		}
-
-		for (int i = 0; i < operations.size() - 1; i++) {
-			PreprocessorOperation current = operations.get(i);
-			PreprocessorOperation next = operations.get(i + 1);
-			current.setChild(next);
+			if (process) {
+				process();
+			}
 		}
 	}
 
@@ -99,13 +85,15 @@ public class ImagePreprocessor {
 		operations.remove(operation);
 	}
 
-	public void setOperations(List<OperationType> operations) {
-		initOperations(operations);
-	}
+	public void setOperations(List<ImageOperation> operations) {
+		List<PreprocessorOperation> preprocessorOperations = new ArrayList<>();
 
-	private <T extends ImageOperation<T>> PreprocessorOperation<T> wrapOperation(OperationType type) {
-		T operation = type.getInstance();
-		return new PreprocessorOperation<>(operation);
+		for (ImageOperation operation : operations) {
+			preprocessorOperations.add(new PreprocessorOperation(operation));
+		}
+
+		this.operations = preprocessorOperations;
+		initOperations(preprocessorOperations);
 	}
 
 	public List<PreprocessorOperation> getOperations() {
@@ -135,5 +123,13 @@ public class ImagePreprocessor {
 
 	public boolean isReady() {
 		return sourceMat != null;
+	}
+
+	private void initOperations(List<PreprocessorOperation> operations) {
+		for (int i = 0; i < operations.size() - 1; i++) {
+			PreprocessorOperation current = this.operations.get(i);
+			PreprocessorOperation next = this.operations.get(i + 1);
+			current.setChild(next);
+		}
 	}
 }

@@ -12,8 +12,8 @@ public class BlurOperationController extends OperationController<BlurOperation> 
     @FXML
     private Slider kernelSizeSlider;
 
-    public BlurOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<BlurOperation> operation) {
-        super(preprocessor, operation);
+    public BlurOperationController(PreprocessorOperation<BlurOperation> operation) {
+        super(operation);
     }
 
     @Override

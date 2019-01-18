@@ -15,8 +15,8 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	@FXML
 	private Slider tileSizeSlider;
 
-	public ClaheOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ClaheOperation> operation) {
-		super(preprocessor, operation);
+	public ClaheOperationController(PreprocessorOperation<ClaheOperation> operation) {
+		super(operation);
 	}
 
 	@Override

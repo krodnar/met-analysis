@@ -43,12 +43,7 @@ public class ThresholdOperation extends AbstractOperation<ThresholdOperation> {
 
     }
 
-    @Override
-    public ThresholdOperation copy() {
-        return new ThresholdOperation(this);
-    }
-
-    public void setOptimalThresh() {
+	public void setOptimalThresh() {
         threshold.set(getOptimalThresh());
     }
 

@@ -15,8 +15,8 @@ public class MorphologicalOperationController extends OperationController<Morpho
     @FXML
     private Slider ellipseSizeSlider;
 
-    public MorphologicalOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<MorphologicalOperation> operation) {
-        super(preprocessor, operation);
+    public MorphologicalOperationController(PreprocessorOperation<MorphologicalOperation> operation) {
+        super(operation);
     }
 
     @Override

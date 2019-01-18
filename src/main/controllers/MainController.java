@@ -71,7 +71,7 @@ public class MainController implements Initializable {
 			return;
 		}
 
-		preprocessor.setSourceMat(sourceMat);
+		preprocessor.setSourceMat(sourceMat, false);
 		operationsController.setSource(sourceMat);
 	}
 

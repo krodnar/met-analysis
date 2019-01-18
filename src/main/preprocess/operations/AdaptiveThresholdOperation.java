@@ -55,12 +55,7 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
         blockSize.unscale();
     }
 
-    @Override
-    public AdaptiveThresholdOperation copy() {
-        return new AdaptiveThresholdOperation(this);
-    }
-
-    public int getAdaptiveMethod() {
+	public int getAdaptiveMethod() {
         return adaptiveMethod.get();
     }
 

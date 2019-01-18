@@ -37,11 +37,6 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 		kernelSize.unscale();
 	}
 
-	@Override
-	public BlurOperation copy() {
-		return new BlurOperation(this);
-	}
-
 	public int getKernelSize() {
 		return kernelSize.get();
 	}

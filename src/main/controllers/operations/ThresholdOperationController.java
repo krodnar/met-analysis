@@ -15,8 +15,8 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	@FXML
 	private CheckBox invertCheckbox;
 
-	public ThresholdOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ThresholdOperation> operation) {
-		super(preprocessor, operation);
+	public ThresholdOperationController(PreprocessorOperation<ThresholdOperation> operation) {
+		super(operation);
 	}
 
 	@Override

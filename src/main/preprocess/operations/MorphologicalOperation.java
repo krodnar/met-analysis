@@ -59,12 +59,7 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
         ellipseSize.unscale();
     }
 
-    @Override
-    public MorphologicalOperation copy() {
-        return new MorphologicalOperation(this);
-    }
-
-    public void setEllipseSize(Size size) {
+	public void setEllipseSize(Size size) {
         ellipseSize.set(size);
     }
 
