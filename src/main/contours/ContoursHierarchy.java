@@ -6,54 +6,19 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class ContoursHierarchy {
 
-	private static final Scalar[] colors = new Scalar[]{
-			new Scalar(0, 0, 0),
-			new Scalar(0, 0, 255),
-			new Scalar(0, 255, 0),
-			new Scalar(0, 255, 255),
-			new Scalar(255, 0, 0),
-			new Scalar(255, 0, 255),
-			new Scalar(255, 255, 0),
-			new Scalar(255, 255, 255)
-	};
-
 	private List<Contour> contours;
-	private Mat sourceImage;
-
-	private boolean contoursDrawn = false;
-	private Mat contoursImage;
-
-	private boolean highlightDrawn = false;
-	private Mat highlightImage;
 
 	private List<MatOfPoint> contourPoints;
 	private Mat hierarchy;
 
 	public static ContoursHierarchy from(Mat image) {
-		return ContoursHierarchy.from(image, image);
-	}
-
-	public static ContoursHierarchy from(Mat image, Mat source) {
 		List<MatOfPoint> contours = new ArrayList<>();
 		Mat hierarchy = new Mat();
 		Imgproc.findContours(image, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-		return new ContoursHierarchy(contours, hierarchy, source);
-	}
-
-	public ContoursHierarchy(List<MatOfPoint> contourPoints, Mat hierarchy, Mat sourceImage) {
-		this.sourceImage = sourceImage;
-		this.contoursImage = sourceImage.clone();
-		this.highlightImage = sourceImage.clone();
-
-		this.contourPoints = contourPoints;
-		this.hierarchy = hierarchy;
-		this.contours = new ArrayList<>();
-
-		processContours(contourPoints, hierarchy);
+		return new ContoursHierarchy(contours, hierarchy);
 	}
 
 	public ContoursHierarchy(List<MatOfPoint> contoursPoints, Mat hierarchy) {
@@ -130,41 +95,6 @@ public class ContoursHierarchy {
 		}
 
 		return c.stream().max(Comparator.comparingInt(Contour::getHierarchyLevel)).orElse(null);
-	}
-
-	public Mat getContoursImage() {
-		if (sourceImage == null) {
-			throw new IllegalStateException("No source image provided.");
-		}
-
-		if (!contoursDrawn) {
-			for (int i = 0; i < contours.size(); i++) {
-				Scalar color = colors[contours.get(i).getHierarchyLevel() % colors.length];
-				Imgproc.drawContours(contoursImage, contourPoints, i, color, 3);
-			}
-		}
-
-		contoursDrawn = true;
-
-		return contoursImage;
-	}
-
-	public Mat getHighlightedContour(int index) {
-		if (sourceImage == null) {
-			throw new IllegalStateException("No source image provided.");
-		}
-
-		if (!highlightDrawn) {
-			Scalar color = Scalar.all(0);
-			Imgproc.drawContours(highlightImage, contourPoints, -1, color, 3);
-			highlightDrawn = true;
-		}
-
-		Mat temp = highlightImage.clone();
-		Scalar color = Scalar.all(255);
-		Imgproc.drawContours(temp, contourPoints, index, color, 3);
-
-		return temp;
 	}
 
 	public List<Contour> getContours() {

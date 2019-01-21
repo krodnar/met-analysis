@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import main.contours.Contour;
 import main.contours.ContoursHierarchy;
+import main.contours.ContoursHierarchyVisualiser;
 import main.preprocess.ImagePreprocessor;
 import main.utils.Utils;
 import main.views.ImageViewPane;
@@ -28,6 +29,7 @@ public class ContoursController implements Initializable {
 	private final ImageViewPane contoursViewPane = new ImageViewPane(contoursView);
 
 	private ContoursHierarchy contoursHierarchy;
+	private ContoursHierarchyVisualiser hierarchyVisualiser = new ContoursHierarchyVisualiser();
 
 	@FXML
 	private BorderPane root;
@@ -70,11 +72,14 @@ public class ContoursController implements Initializable {
 		if (!preprocessor.isReady()) {
 			return;
 		}
+
 		preprocessor.process();
+		contoursHierarchy = ContoursHierarchy.from(preprocessor.getProcessedMat());
 
 		Mat source = preprocessor.getSource();
-		contoursHierarchy = ContoursHierarchy.from(preprocessor.getProcessedMat(), source);
-		Mat image = contoursHierarchy.getContoursImage();
+		hierarchyVisualiser.setHierarchy(contoursHierarchy);
+		hierarchyVisualiser.setSourceImage(source);
+		Mat image = hierarchyVisualiser.getContoursImage();
 
 		contoursView.setImage(Utils.mat2Image(image));
 		root.setCenter(contoursViewPane);
@@ -94,7 +99,7 @@ public class ContoursController implements Initializable {
 
 			int index = newContour.getIndex();
 
-			Mat image = contoursHierarchy.getHighlightedContour(index);
+			Mat image = hierarchyVisualiser.getHighlightedContour(index);
 			contoursView.setImage(Utils.mat2Image(image));
 		});
 	}
