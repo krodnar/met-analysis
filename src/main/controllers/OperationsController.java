@@ -58,12 +58,8 @@ public class OperationsController implements Initializable, OperationController.
 				return;
 			}
 
-			if (oldOperation != null) {
-				preprocessor.applyOperationsFrom(oldOperation);
-			}
-
-			Mat imageMat = preprocessor.getMat(newOperation);
-			imageView.setImage(Utils.mat2Image(imageMat));
+			newOperation.process();
+			setImage(newOperation);
 
 			setCurrentOperation(newOperation);
 		});
@@ -81,7 +77,7 @@ public class OperationsController implements Initializable, OperationController.
 				return;
 			case CLAHE:
 				loader.setLocation(getClass().getResource("../views/claheOperation.fxml"));
-				controller = new ClaheOperationController(preprocessor, operation);
+				controller = new ClaheOperationController(operation);
 				break;
 			// TODO: 25.12.2018 add adaptive threshold controls
 			// case ADAPTIVE_THRESHOLD:
@@ -90,15 +86,15 @@ public class OperationsController implements Initializable, OperationController.
 			// 	break;
 			case THRESHOLD:
 				loader.setLocation(getClass().getResource("../views/thresholdOperation.fxml"));
-				controller = new ThresholdOperationController(preprocessor, operation);
+				controller = new ThresholdOperationController(operation);
 				break;
 			case MORPHOLOGY:
 				loader.setLocation(getClass().getResource("../views/morphologicalOperation.fxml"));
-				controller = new MorphologicalOperationController(preprocessor, operation);
+				controller = new MorphologicalOperationController(operation);
 				break;
 			case BLUR:
 				loader.setLocation(getClass().getResource("../views/blurOperation.fxml"));
-				controller = new BlurOperationController(preprocessor, operation);
+				controller = new BlurOperationController(operation);
 				break;
 			default:
 				return;
@@ -124,13 +120,19 @@ public class OperationsController implements Initializable, OperationController.
 	public void setSource(Mat sourceMat) {
 		imageView.setImage(Utils.mat2Image(sourceMat));
 		operationContainer.setCenter(imageViewPane);
-		operationsList.getSelectionModel().select(0);
+		operationsList.getSelectionModel().clearSelection();
 	}
 
 	@Override
 	public void onOperationApply(OperationController controller, PreprocessorOperation operation) {
-		Mat imageMat = operation.getResult();
-		imageView.setImage(Utils.mat2Image(imageMat));
+		setImage(operation);
+	}
+
+	private void setImage(PreprocessorOperation operation) {
+		if (operation.isProcessed()) {
+			Mat imageMat = operation.getResult();
+			imageView.setImage(Utils.mat2Image(imageMat));
+		}
 	}
 
 	public ImagePreprocessor getPreprocessor() {
@@ -140,13 +142,5 @@ public class OperationsController implements Initializable, OperationController.
 	public void setPreprocessor(ImagePreprocessor preprocessor) {
 		this.preprocessor = preprocessor;
 		populateList(preprocessor);
-	}
-
-	public Mat getProcessedMat() {
-		return preprocessor.getProcessedMat();
-	}
-
-	public Image getProcessedImage() {
-		return Utils.mat2Image(preprocessor.getProcessedMat());
 	}
 }

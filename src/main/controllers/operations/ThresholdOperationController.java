@@ -15,12 +15,12 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	@FXML
 	private CheckBox invertCheckbox;
 
-	public ThresholdOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ThresholdOperation> operation) {
-		super(preprocessor, operation);
+	public ThresholdOperationController(PreprocessorOperation<ThresholdOperation> operation) {
+		super(operation);
 	}
 
 	@Override
-	public void setControlsValues(ImagePreprocessor preprocessor, ThresholdOperation operation) {
+	public void setControlsValues(PreprocessorOperation preprocessorOperation, ThresholdOperation operation) {
 		double threshold = operation.getThreshold();
 		thresholdSlider.setValue(threshold);
 
@@ -32,7 +32,7 @@ public class ThresholdOperationController extends OperationController<ThresholdO
 	}
 
 	@Override
-	public void setControlsListeners(ImagePreprocessor preprocessor, ThresholdOperation operation) {
+	public void setControlsListeners(PreprocessorOperation preprocessorOperation, ThresholdOperation operation) {
 		thresholdSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			operation.setThreshold(newValue.doubleValue());
 			applyOperation();

@@ -3,7 +3,7 @@ package main.preprocess.operations;
 import main.preprocess.OperationType;
 import org.opencv.core.Mat;
 
-public interface ImageOperation<T extends ImageOperation<T>> {
+public interface ImageOperation {
 
 	void apply(Mat src, Mat dst);
 
@@ -18,6 +18,4 @@ public interface ImageOperation<T extends ImageOperation<T>> {
 	double getScaling();
 
 	boolean isScaled();
-
-	T copy();
 }

@@ -15,12 +15,12 @@ public class MorphologicalOperationController extends OperationController<Morpho
     @FXML
     private Slider ellipseSizeSlider;
 
-    public MorphologicalOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<MorphologicalOperation> operation) {
-        super(preprocessor, operation);
+    public MorphologicalOperationController(PreprocessorOperation<MorphologicalOperation> operation) {
+        super(operation);
     }
 
     @Override
-    public void setControlsValues(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
+    public void setControlsValues(PreprocessorOperation preprocessorOperation, MorphologicalOperation operation) {
         double crossSize = operation.getCrossSize().height;
         crossSizeSlider.setValue(crossSize);
 
@@ -29,7 +29,7 @@ public class MorphologicalOperationController extends OperationController<Morpho
     }
 
     @Override
-    public void setControlsListeners(ImagePreprocessor preprocessor, MorphologicalOperation operation) {
+    public void setControlsListeners(PreprocessorOperation preprocessorOperation, MorphologicalOperation operation) {
         crossSizeSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
             Size newSize = new Size(newValue.doubleValue(), newValue.doubleValue());
             operation.setCrossSize(newSize);

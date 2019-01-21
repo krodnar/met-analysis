@@ -15,9 +15,16 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
 
     public AdaptiveThresholdOperation() {
 		blockSize = new IntParameter(20, "block");
+		blockSize.setListener((parameter, oldValue, newValue) -> fireOnChange());
+
 		adaptiveMethod = new IntParameter(Imgproc.ADAPTIVE_THRESH_MEAN_C, "method");
+		adaptiveMethod.setListener((parameter, oldValue, newValue) -> fireOnChange());
+
 		thresholdType = new IntParameter(Imgproc.THRESH_BINARY, "type");
+		thresholdType.setListener((parameter, oldValue, newValue) -> fireOnChange());
+
 		subConstant = new DoubleParameter(0d, "constant");
+		subConstant.setListener((parameter, oldValue, newValue) -> fireOnChange());
 	}
 
     public AdaptiveThresholdOperation(AdaptiveThresholdOperation operation) {
@@ -48,12 +55,7 @@ public class AdaptiveThresholdOperation extends AbstractOperation<AdaptiveThresh
         blockSize.unscale();
     }
 
-    @Override
-    public AdaptiveThresholdOperation copy() {
-        return new AdaptiveThresholdOperation(this);
-    }
-
-    public int getAdaptiveMethod() {
+	public int getAdaptiveMethod() {
         return adaptiveMethod.get();
     }
 

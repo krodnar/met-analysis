@@ -2,10 +2,15 @@ package main.preprocess.operations;
 
 import org.opencv.core.Mat;
 
-public abstract class AbstractOperation<T extends ImageOperation<T>> implements ImageOperation<T> {
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractOperation<T extends ImageOperation> implements ObservableOperation<T> {
 
 	private boolean scaled;
 	private double scaleCoefficient = 1;
+
+	private List<OperationObserver> observers = new ArrayList<>();
 
 	@Override
 	public Mat process(Mat mat) {
@@ -44,6 +49,22 @@ public abstract class AbstractOperation<T extends ImageOperation<T>> implements 
 	@Override
 	public boolean isScaled() {
 		return scaled;
+	}
+
+	@Override
+	public void addObserver(OperationObserver observer) {
+		observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(OperationObserver observer) {
+		observers.remove(observer);
+	}
+
+	protected void fireOnChange() {
+		for (OperationObserver observer : observers) {
+			observer.onOperationChange(this);
+		}
 	}
 
 	protected abstract void scaleParameters(double coefficient);

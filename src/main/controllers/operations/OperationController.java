@@ -9,14 +9,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public abstract class OperationController<T extends ImageOperation<T>> implements Initializable {
+public abstract class OperationController<T extends ImageOperation> implements Initializable {
 
-	private ImagePreprocessor preprocessor;
 	private PreprocessorOperation<T> operation;
 	private ArrayList<OperationControlsListener> listeners = new ArrayList<>();
 
-	public OperationController(ImagePreprocessor preprocessor, PreprocessorOperation<T> operation) {
-		this.preprocessor = preprocessor;
+	public OperationController(PreprocessorOperation<T> operation) {
 		this.operation = operation;
 	}
 
@@ -29,7 +27,7 @@ public abstract class OperationController<T extends ImageOperation<T>> implement
 	}
 
 	public void applyOperation() {
-		operation.apply();
+		operation.process();
 		fireOnApply();
 	}
 
@@ -41,13 +39,13 @@ public abstract class OperationController<T extends ImageOperation<T>> implement
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		setControlsValues(preprocessor, operation.getImageOperation());
-		setControlsListeners(preprocessor, operation.getImageOperation());
+		setControlsValues(operation, operation.getImageOperation());
+		setControlsListeners(operation, operation.getImageOperation());
 	}
 
-	public abstract void setControlsValues(ImagePreprocessor preprocessor, T operation);
+	public abstract void setControlsValues(PreprocessorOperation preprocessorOperation, T operation);
 
-	public abstract void setControlsListeners(ImagePreprocessor preprocessor, T operation);
+	public abstract void setControlsListeners(PreprocessorOperation preprocessorOperation, T operation);
 
 	public interface OperationControlsListener {
 

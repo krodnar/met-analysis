@@ -15,6 +15,16 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     private Mat kernelEllipse;
 
     public MorphologicalOperation() {
+        crossSize.setListener((parameter, oldSize, newSize) -> {
+            kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, newSize);
+            fireOnChange();
+        });
+
+        ellipseSize.setListener((parameter, oldSize, newSize) -> {
+            kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, newSize);
+            fireOnChange();
+        });
+
         setEllipseSize(new Size(18, 18));
         setCrossSize(new Size(30, 30));
     }
@@ -41,31 +51,20 @@ public class MorphologicalOperation extends AbstractOperation<MorphologicalOpera
     protected void scaleParameters(double coefficient) {
         crossSize.scale(coefficient);
         ellipseSize.scale(coefficient);
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
     @Override
     protected void unscaleParameters(double coefficient) {
         crossSize.unscale();
         ellipseSize.unscale();
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
-    @Override
-    public MorphologicalOperation copy() {
-        return new MorphologicalOperation(this);
-    }
-
-    public void setEllipseSize(Size size) {
+	public void setEllipseSize(Size size) {
         ellipseSize.set(size);
-        kernelEllipse = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, ellipseSize.get());
     }
 
     public void setCrossSize(Size size) {
         crossSize.set(size);
-        kernelCross = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, crossSize.get());
     }
 
     public Size getCrossSize() {

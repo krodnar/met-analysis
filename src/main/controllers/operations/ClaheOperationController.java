@@ -15,12 +15,12 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	@FXML
 	private Slider tileSizeSlider;
 
-	public ClaheOperationController(ImagePreprocessor preprocessor, PreprocessorOperation<ClaheOperation> operation) {
-		super(preprocessor, operation);
+	public ClaheOperationController(PreprocessorOperation<ClaheOperation> operation) {
+		super(operation);
 	}
 
 	@Override
-	public void setControlsValues(ImagePreprocessor preprocessor, ClaheOperation operation) {
+	public void setControlsValues(PreprocessorOperation preprocessorOperation, ClaheOperation operation) {
 		double clipLimit = operation.getClipLimit();
 		clipLimitSlider.setValue(clipLimit);
 
@@ -29,7 +29,7 @@ public class ClaheOperationController extends OperationController<ClaheOperation
 	}
 
 	@Override
-	public void setControlsListeners(ImagePreprocessor preprocessor, ClaheOperation operation) {
+	public void setControlsListeners(PreprocessorOperation preprocessorOperation, ClaheOperation operation) {
 		clipLimitSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			operation.setClipLimit(newValue.doubleValue());
 			applyOperation();

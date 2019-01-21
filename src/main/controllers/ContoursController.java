@@ -70,7 +70,7 @@ public class ContoursController implements Initializable {
 		if (!preprocessor.isReady()) {
 			return;
 		}
-		preprocessor.finishProcessing();
+		preprocessor.process();
 
 		Mat source = preprocessor.getSource();
 		contoursHierarchy = ContoursHierarchy.from(preprocessor.getProcessedMat(), source);

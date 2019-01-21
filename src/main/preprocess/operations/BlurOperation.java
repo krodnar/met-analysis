@@ -10,6 +10,7 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	private OddIntParameter kernelSize = new OddIntParameter(51);
 
 	public BlurOperation() {
+		kernelSize.setListener((parameter, oldValue, newValue) -> fireOnChange());
 	}
 
 	public BlurOperation(BlurOperation operation) {
@@ -34,11 +35,6 @@ public class BlurOperation extends AbstractOperation<BlurOperation> {
 	@Override
 	protected void unscaleParameters(double coefficient) {
 		kernelSize.unscale();
-	}
-
-	@Override
-	public BlurOperation copy() {
-		return new BlurOperation(this);
 	}
 
 	public int getKernelSize() {
